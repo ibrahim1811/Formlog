@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0a0a0f">
 <title>FormLog</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 /* ── RESET & ROOT ─────────────────────────────────────────────────── */
 :root{
@@ -25,15 +25,18 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html{font-size:16px;height:100%;-webkit-text-size-adjust:100%}
 body{
-  font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);
+  font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;
+  background:var(--bg);color:var(--text);
   min-height:100%;min-height:100dvh;overflow-x:hidden;
-  -webkit-font-smoothing:antialiased;touch-action:pan-y;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  touch-action:pan-y;font-feature-settings:"kern" 1;
 }
 button{cursor:pointer;font-family:inherit;border:none;outline:none;-webkit-appearance:none;touch-action:manipulation}
 input,textarea,select{font-family:inherit;outline:none;border:none;-webkit-appearance:none;appearance:none}
 a{text-decoration:none;color:inherit}
 img{display:block;max-width:100%}
-h1,h2,h3,h4,h5{font-family:'Syne',sans-serif}
+h1,h2,h3,h4,h5{font-family:'Space Grotesk',system-ui,-apple-system,sans-serif;letter-spacing:-0.02em}
+.num-font{font-family:'Space Grotesk',system-ui,-apple-system,sans-serif;font-variant-numeric:tabular-nums;letter-spacing:-0.03em}
 
 /* prevent double-tap zoom on buttons */
 button,a,[onclick]{touch-action:manipulation}
@@ -49,7 +52,7 @@ button,a,[onclick]{touch-action:manipulation}
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;
 }
 .loader-logo{
-  font-family:'Syne',sans-serif;font-size:36px;font-weight:800;
+  font-family:'Space Grotesk',system-ui,-apple-system,sans-serif;letter-spacing:-0.02em;font-size:36px;font-weight:800;
   background:linear-gradient(135deg,var(--accent),var(--accent2));
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
 }
@@ -124,7 +127,7 @@ button,a,[onclick]{touch-action:manipulation}
   width:100%;max-width:400px;position:relative;z-index:1;
 }
 .auth-logo{
-  font-family:'Syne',sans-serif;font-size:30px;font-weight:800;
+  font-family:'Space Grotesk',system-ui,-apple-system,sans-serif;letter-spacing:-0.02em;font-size:30px;font-weight:800;
   background:linear-gradient(135deg,var(--accent),var(--accent2));
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
   text-align:center;margin-bottom:4px;
@@ -133,7 +136,7 @@ button,a,[onclick]{touch-action:manipulation}
 .tab-row{display:flex;gap:4px;background:var(--bg2);border-radius:12px;padding:4px;margin-bottom:20px}
 .tab-btn{
   flex:1;padding:10px;border-radius:9px;
-  font-size:14px;font-weight:700;font-family:'Syne',sans-serif;
+  font-size:14px;font-weight:700;font-family:'Space Grotesk',system-ui,-apple-system,sans-serif;letter-spacing:-0.02em;
   background:transparent;color:var(--text2);transition:all .2s;
   min-height:44px;
 }
@@ -162,7 +165,7 @@ textarea.fi{resize:none;min-height:90px;line-height:1.5}
 
 .btn{
   display:inline-flex;align-items:center;justify-content:center;gap:8px;
-  padding:14px 24px;border-radius:14px;font-weight:700;font-family:'Syne',sans-serif;
+  padding:14px 24px;border-radius:14px;font-weight:700;font-family:'Space Grotesk',system-ui,-apple-system,sans-serif;letter-spacing:-0.02em;
   font-size:15px;transition:all .15s;min-height:50px;min-width:44px;
   -webkit-appearance:none;
 }
@@ -195,7 +198,7 @@ textarea.fi{resize:none;min-height:90px;line-height:1.5}
   display:flex;align-items:flex-end;justify-content:space-between;padding-bottom:10px;
   position:relative;z-index:200;
 }
-.topbar-logo{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.topbar-logo{font-family:'Space Grotesk',system-ui,-apple-system,sans-serif;letter-spacing:-0.02em;font-size:22px;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .topbar-right{display:flex;align-items:center;gap:8px}
 .icon-btn{
   width:38px;height:38px;border-radius:50%;background:var(--bg3);
@@ -241,7 +244,7 @@ textarea.fi{resize:none;min-height:90px;line-height:1.5}
   min-height:44px;position:relative;
 }
 .ni-icon{font-size:22px;transition:transform .2s}
-.ni-label{font-size:9px;font-weight:700;font-family:'Syne',sans-serif;color:var(--text3);text-transform:uppercase;letter-spacing:.4px}
+.ni-label{font-size:9px;font-weight:700;font-family:'Space Grotesk',system-ui,-apple-system,sans-serif;letter-spacing:-0.02em;color:var(--text3);text-transform:uppercase;letter-spacing:.4px}
 .ni.active .ni-icon{transform:scale(1.15)}
 .ni.active .ni-label{color:var(--accent2)}
 .ni-add{
@@ -257,7 +260,7 @@ textarea.fi{resize:none;min-height:90px;line-height:1.5}
 /* ── CARDS ────────────────────────────────────────────────────────── */
 .card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:18px}
 .card-sm{padding:14px}
-.card-label{font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;font-family:'Syne',sans-serif}
+.card-label{font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;font-family:'Space Grotesk',system-ui,-apple-system,sans-serif;letter-spacing:-0.02em}
 
 /* ── HOME ─────────────────────────────────────────────────────────── */
 .greeting{font-size:24px;font-weight:800}
@@ -271,7 +274,7 @@ textarea.fi{resize:none;min-height:90px;line-height:1.5}
 .ring-bg{fill:none;stroke:var(--bg3);stroke-width:9}
 .ring-fg{fill:none;stroke:url(#rg);stroke-width:9;stroke-linecap:round;transition:stroke-dashoffset .9s ease}
 .ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.ring-num{font-size:19px;font-weight:800;font-family:'Syne',sans-serif;line-height:1}
+.ring-num{font-size:19px;font-weight:800;font-family:'Space Grotesk',system-ui,-apple-system,sans-serif;letter-spacing:-0.02em;line-height:1}
 .ring-unit{font-size:9px;color:var(--text2);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
 .ring-details{flex:1;min-width:0}
 .ring-goal-txt{font-size:12px;color:var(--text2);margin-bottom:10px}
@@ -286,7 +289,7 @@ textarea.fi{resize:none;min-height:90px;line-height:1.5}
 /* stat pills row */
 .stat-pills{display:flex;gap:8px}
 .stat-pill{flex:1;background:var(--bg3);border-radius:14px;padding:12px 8px;text-align:center}
-.sp-val{font-size:20px;font-weight:800;font-family:'Syne',sans-serif;line-height:1}
+.sp-val{font-size:20px;font-weight:800;font-family:'Space Grotesk',system-ui,-apple-system,sans-serif;letter-spacing:-0.02em;line-height:1}
 .sp-lbl{font-size:9px;color:var(--text2);font-weight:700;text-transform:uppercase;margin-top:3px;letter-spacing:.4px}
 
 /* quick buttons */
@@ -294,7 +297,7 @@ textarea.fi{resize:none;min-height:90px;line-height:1.5}
 .quick-row::-webkit-scrollbar{display:none}
 .qbtn{
   flex-shrink:0;padding:9px 16px;border-radius:99px;
-  font-size:12px;font-weight:700;font-family:'Syne',sans-serif;
+  font-size:12px;font-weight:700;font-family:'Space Grotesk',system-ui,-apple-system,sans-serif;letter-spacing:-0.02em;
   background:var(--bg3);border:1.5px solid var(--border);color:var(--text2);
   white-space:nowrap;min-height:38px;
 }
@@ -311,7 +314,7 @@ textarea.fi{resize:none;min-height:90px;line-height:1.5}
 .mi-info{flex:1;min-width:0}
 .mi-name{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .mi-meta{font-size:11px;color:var(--text2);margin-top:2px}
-.mi-kcal{font-size:13px;font-weight:800;font-family:'Syne',sans-serif;color:var(--accent2);flex-shrink:0}
+.mi-kcal{font-size:13px;font-weight:800;font-family:'Space Grotesk',system-ui,-apple-system,sans-serif;letter-spacing:-0.02em;color:var(--accent2);flex-shrink:0}
 .mi-del{width:32px;height:32px;min-width:44px;min-height:44px;border-radius:50%;background:transparent;color:var(--text3);font-size:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .mi-del:active{background:rgba(255,107,107,.15);color:var(--red)}
 
@@ -320,7 +323,7 @@ textarea.fi{resize:none;min-height:90px;line-height:1.5}
 .wi-info{flex:1;min-width:0}
 .wi-name{font-size:14px;font-weight:700;margin-bottom:5px}
 .wi-meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
-.badge{padding:3px 10px;border-radius:99px;font-size:10px;font-weight:800;font-family:'Syne',sans-serif;text-transform:uppercase;white-space:nowrap}
+.badge{padding:3px 10px;border-radius:99px;font-size:10px;font-weight:800;font-family:'Space Grotesk',system-ui,-apple-system,sans-serif;letter-spacing:-0.02em;text-transform:uppercase;white-space:nowrap}
 .b-str{background:rgba(108,92,231,.2);color:var(--accent2)}
 .b-car{background:rgba(255,107,107,.2);color:var(--red)}
 .b-fle{background:rgba(0,206,201,.2);color:var(--green)}
@@ -330,14 +333,14 @@ textarea.fi{resize:none;min-height:90px;line-height:1.5}
 
 /* ── SOCIAL ───────────────────────────────────────────────────────── */
 .feed-tabs{display:flex;gap:4px;background:var(--bg2);border-radius:12px;padding:4px;margin-bottom:12px}
-.ft{flex:1;padding:9px 4px;border-radius:9px;font-size:12px;font-weight:800;font-family:'Syne',sans-serif;background:transparent;color:var(--text2);text-align:center;min-height:40px}
+.ft{flex:1;padding:9px 4px;border-radius:9px;font-size:12px;font-weight:800;font-family:'Space Grotesk',system-ui,-apple-system,sans-serif;letter-spacing:-0.02em;background:transparent;color:var(--text2);text-align:center;min-height:40px}
 .ft.active{background:var(--accent);color:#fff}
 
 .post-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:14px;margin-bottom:10px}
 .pc-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
 .pc-av{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--pink));display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff;flex-shrink:0;overflow:hidden}
 .pc-av img{width:100%;height:100%;object-fit:cover}
-.pc-name{font-size:14px;font-weight:800;font-family:'Syne',sans-serif}
+.pc-name{font-size:14px;font-weight:800;font-family:'Space Grotesk',system-ui,-apple-system,sans-serif;letter-spacing:-0.02em}
 .pc-time{font-size:11px;color:var(--text3)}
 .pc-body{font-size:14px;line-height:1.6;color:var(--text)}
 .pc-actions{display:flex;gap:4px;margin-top:12px;padding-top:10px;border-top:1px solid var(--border)}
@@ -349,7 +352,7 @@ textarea.fi{resize:none;min-height:90px;line-height:1.5}
 .cmt{display:flex;gap:8px;margin-bottom:10px}
 .cmt-av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--accent));display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0}
 .cmt-bubble{background:var(--bg3);border-radius:12px;padding:8px 12px;flex:1}
-.cmt-user{font-size:11px;font-weight:800;font-family:'Syne',sans-serif}
+.cmt-user{font-size:11px;font-weight:800;font-family:'Space Grotesk',system-ui,-apple-system,sans-serif;letter-spacing:-0.02em}
 .cmt-txt{font-size:13px;color:var(--text2);margin-top:2px;line-height:1.4}
 .cmt-input-row{display:flex;gap:8px;align-items:center;margin-top:8px}
 .cmt-input{flex:1;background:var(--bg3);border:1.5px solid var(--border);border-radius:99px;padding:10px 14px;font-size:13px;color:var(--text);min-height:44px}
@@ -361,14 +364,14 @@ textarea.fi{resize:none;min-height:90px;line-height:1.5}
 .friend-card{display:flex;align-items:center;gap:12px;padding:12px;background:var(--bg3);border-radius:14px;margin-bottom:8px}
 .fc-av{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--pink));display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;color:#fff;flex-shrink:0}
 .fc-info{flex:1;min-width:0}
-.fc-name{font-size:14px;font-weight:800;font-family:'Syne',sans-serif}
+.fc-name{font-size:14px;font-weight:800;font-family:'Space Grotesk',system-ui,-apple-system,sans-serif;letter-spacing:-0.02em}
 .fc-meta{font-size:12px;color:var(--text2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .fc-actions{display:flex;gap:6px;flex-shrink:0}
 
 /* ── STATS ────────────────────────────────────────────────────────── */
 .stats-3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .scard{background:var(--bg3);border-radius:14px;padding:14px 8px;text-align:center}
-.scard-val{font-size:22px;font-weight:800;font-family:'Syne',sans-serif;line-height:1}
+.scard-val{font-size:22px;font-weight:800;font-family:'Space Grotesk',system-ui,-apple-system,sans-serif;letter-spacing:-0.02em;line-height:1}
 .scard-lbl{font-size:9px;color:var(--text2);font-weight:700;text-transform:uppercase;margin-top:4px}
 .chart-box{width:100%;height:160px}
 canvas{width:100%!important}
@@ -379,7 +382,7 @@ canvas{width:100%!important}
 .ach-card.done{border-color:rgba(108,92,231,.3);background:rgba(108,92,231,.07)}
 .ach-card.locked{opacity:.45;filter:grayscale(.8)}
 .ach-ico{font-size:28px;margin-bottom:5px;line-height:1}
-.ach-name{font-size:10px;font-weight:800;font-family:'Syne',sans-serif;line-height:1.3;letter-spacing:.2px}
+.ach-name{font-size:10px;font-weight:800;font-family:'Space Grotesk',system-ui,-apple-system,sans-serif;letter-spacing:-0.02em;line-height:1.3;letter-spacing:.2px}
 .ach-stat{font-size:9px;color:var(--text3);margin-top:3px}
 
 /* ── PROFILE ──────────────────────────────────────────────────────── */
@@ -400,7 +403,7 @@ canvas{width:100%!important}
 .prof-stats{display:flex;gap:0;margin-top:16px;background:rgba(0,0,0,.25);border-radius:14px;overflow:hidden}
 .ps{flex:1;padding:12px 6px;text-align:center;border-right:1px solid rgba(255,255,255,.06)}
 .ps:last-child{border-right:none}
-.ps-val{font-size:18px;font-weight:800;font-family:'Syne',sans-serif}
+.ps-val{font-size:18px;font-weight:800;font-family:'Space Grotesk',system-ui,-apple-system,sans-serif;letter-spacing:-0.02em}
 .ps-lbl{font-size:9px;color:var(--text2);text-transform:uppercase;font-weight:700;margin-top:2px}
 
 .settings-list{display:flex;flex-direction:column;gap:2px;background:var(--card);border-radius:18px;overflow:hidden}
@@ -446,7 +449,7 @@ input:checked+.toggle-slider::before{transform:translateX(22px)}
 .chat-foot{padding:10px 16px 16px;border-top:1px solid var(--border)}
 .chat-quick-row{display:flex;gap:6px;flex-wrap:nowrap;overflow-x:auto;padding-bottom:10px;-webkit-overflow-scrolling:touch}
 .chat-quick-row::-webkit-scrollbar{display:none}
-.cq{flex-shrink:0;padding:7px 14px;border-radius:99px;font-size:12px;font-weight:700;background:var(--bg3);border:1px solid var(--border);color:var(--text2);min-height:36px;font-family:'Syne',sans-serif}
+.cq{flex-shrink:0;padding:7px 14px;border-radius:99px;font-size:12px;font-weight:700;background:var(--bg3);border:1px solid var(--border);color:var(--text2);min-height:36px;font-family:'Space Grotesk',system-ui,-apple-system,sans-serif;letter-spacing:-0.02em}
 .cq:active{border-color:var(--accent);color:var(--accent)}
 .chat-input-row{display:flex;gap:8px;align-items:center}
 .chat-input{
@@ -469,7 +472,7 @@ input:checked+.toggle-slider::before{transform:translateX(22px)}
 .add-card{background:var(--bg3);border:1.5px solid var(--border);border-radius:18px;padding:20px 14px;text-align:center;cursor:pointer;min-height:110px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;transition:all .15s}
 .add-card:active{border-color:var(--accent);background:rgba(108,92,231,.1)}
 .add-card-ico{font-size:32px;line-height:1}
-.add-card-name{font-size:14px;font-weight:800;font-family:'Syne',sans-serif}
+.add-card-name{font-size:14px;font-weight:800;font-family:'Space Grotesk',system-ui,-apple-system,sans-serif;letter-spacing:-0.02em}
 .add-card-desc{font-size:11px;color:var(--text2)}
 
 /* ── SEARCH ───────────────────────────────────────────────────────── */
@@ -491,7 +494,7 @@ input:checked+.toggle-slider::before{transform:translateX(22px)}
 
 /* intensity */
 .int-row{display:flex;gap:6px}
-.int-opt{flex:1;padding:10px 4px;border-radius:12px;border:1.5px solid var(--border);text-align:center;font-size:12px;font-weight:800;font-family:'Syne',sans-serif;color:var(--text2);min-height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.int-opt{flex:1;padding:10px 4px;border-radius:12px;border:1.5px solid var(--border);text-align:center;font-size:12px;font-weight:800;font-family:'Space Grotesk',system-ui,-apple-system,sans-serif;letter-spacing:-0.02em;color:var(--text2);min-height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer}
 .int-low.sel{border-color:var(--green);color:var(--green);background:rgba(0,206,201,.1)}
 .int-med.sel{border-color:var(--orange);color:var(--orange);background:rgba(253,203,110,.1)}
 .int-hig.sel{border-color:var(--red);color:var(--red);background:rgba(255,107,107,.1)}
@@ -502,7 +505,7 @@ input:checked+.toggle-slider::before{transform:translateX(22px)}
 /* ── EMPTY STATE ──────────────────────────────────────────────────── */
 .empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:36px 16px;text-align:center;color:var(--text2)}
 .empty-ico{font-size:44px;margin-bottom:12px;opacity:.5}
-.empty-ttl{font-size:16px;font-weight:800;font-family:'Syne',sans-serif;margin-bottom:6px;color:var(--text)}
+.empty-ttl{font-size:16px;font-weight:800;font-family:'Space Grotesk',system-ui,-apple-system,sans-serif;letter-spacing:-0.02em;margin-bottom:6px;color:var(--text)}
 .empty-sub{font-size:13px}
 
 /* ── SEPARATOR ────────────────────────────────────────────────────── */
@@ -510,18 +513,18 @@ input:checked+.toggle-slider::before{transform:translateX(22px)}
 .gap-section{height:6px}
 
 /* ── MEAL DATE HEADER ─────────────────────────────────────────────── */
-.date-hdr{font-size:12px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.8px;font-family:'Syne',sans-serif;padding:4px 0 8px;display:flex;align-items:center;gap:8px}
+.date-hdr{font-size:12px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.8px;font-family:'Space Grotesk',system-ui,-apple-system,sans-serif;letter-spacing:-0.02em;padding:4px 0 8px;display:flex;align-items:center;gap:8px}
 .date-hdr::after{content:'';flex:1;height:1px;background:var(--border)}
 
 /* filter pills */
 .filter-row{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch}
 .filter-row::-webkit-scrollbar{display:none}
-.fpill{flex-shrink:0;padding:8px 14px;border-radius:99px;font-size:12px;font-weight:700;font-family:'Syne',sans-serif;background:var(--bg3);border:1.5px solid var(--border);color:var(--text2);min-height:38px}
+.fpill{flex-shrink:0;padding:8px 14px;border-radius:99px;font-size:12px;font-weight:700;font-family:'Space Grotesk',system-ui,-apple-system,sans-serif;letter-spacing:-0.02em;background:var(--bg3);border:1.5px solid var(--border);color:var(--text2);min-height:38px}
 .fpill.sel{border-color:var(--accent);color:var(--accent);background:rgba(108,92,231,.1)}
 .fpill:active{opacity:.8}
 
 /* ── UTILS ────────────────────────────────────────────────────────── */
-.fw800{font-weight:800;font-family:'Syne',sans-serif}
+.fw800{font-weight:800;font-family:'Space Grotesk',system-ui,-apple-system,sans-serif;letter-spacing:-0.02em}
 .tc-accent{color:var(--accent2)}
 .tc-green{color:var(--green)}
 .tc-red{color:var(--red)}
@@ -536,6 +539,50 @@ input:checked+.toggle-slider::before{transform:translateX(22px)}
 .mt16{margin-top:16px}
 .mb8{margin-bottom:8px}
 .mb12{margin-bottom:12px}
+
+/* ── NUMBER TYPOGRAPHY FIX ─── */
+.ring-num,.sp-val,.scard-val,.ps-val,.mi-kcal,.wi-extra,
+.loader-logo,.auth-logo,.sec-title,.sheet-title,.btn,
+.tab-btn,.ft,.badge,.fpill,.qbtn,.card-label,.fl{
+  font-family:'Space Grotesk',system-ui,-apple-system,sans-serif;
+  letter-spacing:-0.01em;
+}
+.ring-num,.sp-val,.scard-val,.ps-val{
+  font-variant-numeric:tabular-nums;
+  letter-spacing:-0.04em;
+  font-size:clamp(18px,5vw,26px);
+}
+.mi-kcal{font-variant-numeric:tabular-nums;letter-spacing:-0.02em}
+.ring-num{font-size:20px!important;line-height:1;letter-spacing:-0.04em}
+.greeting,.prof-name,.sec-title,.sheet-title,.auth-logo,.loader-logo{
+  letter-spacing:-0.03em;
+}
+
+/* ── MEAL SEARCH UI ───────────────────────────────────────────────── */
+.meal-result-item{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 14px;background:var(--bg3);border-radius:14px;
+  border:1.5px solid transparent;cursor:pointer;transition:all .15s;
+  margin-bottom:7px;
+}
+.meal-result-item:active{border-color:var(--accent);background:rgba(108,92,231,.08)}
+.mr-ico{width:40px;height:40px;border-radius:11px;background:var(--card);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.mr-info{flex:1;min-width:0}
+.mr-name{font-size:14px;font-weight:700}
+.mr-macro{font-size:11px;color:var(--text2);margin-top:2px}
+.mr-kcal{font-family:'Space Grotesk',system-ui,sans-serif;font-size:15px;font-weight:700;color:var(--accent2);flex-shrink:0;font-variant-numeric:tabular-nums}
+
+.portion-btn{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:13px 16px;background:var(--bg3);border-radius:12px;
+  border:1.5px solid var(--border);cursor:pointer;transition:all .15s;
+}
+.portion-btn:active,.portion-btn.sel{border-color:var(--accent);background:rgba(108,92,231,.1)}
+.pb-label{font-size:14px;font-weight:600}
+.pb-kcal{font-family:'Space Grotesk',system-ui,sans-serif;font-size:14px;font-weight:700;color:var(--accent2);font-variant-numeric:tabular-nums}
+.pb-gram{font-size:11px;color:var(--text3);margin-top:1px}
+
+.no-results{text-align:center;padding:20px 0;color:var(--text3);font-size:14px}
 </style>
 </head>
 <body>
@@ -882,29 +929,109 @@ input:checked+.toggle-slider::before{transform:translateX(22px)}
     <div class="sheet-handle"></div>
     <div class="sheet-header"><div class="sheet-title">Öğün Ekle</div><button class="sheet-close" onclick="closeSheet('sh-meal')">✕</button></div>
     <div class="sheet-body">
-      <div class="fg"><label class="fl">Öğün Adı</label>
-        <input type="text" id="mn" class="fi" placeholder="örn: Tavuk Göğsü" list="meal-dl" autocomplete="off">
-        <datalist id="meal-dl"></datalist>
+
+      <!-- STEP 1: Search -->
+      <div id="meal-step-search">
+        <div class="fg">
+          <label class="fl">🔍 Yemek Ara</label>
+          <input type="text" id="meal-search-inp" class="fi" placeholder="Mantı, tavuk, yumurta..."
+            autocomplete="off" oninput="onMealSearch(this.value)">
+        </div>
+        <!-- Search results -->
+        <div id="meal-search-results"></div>
+        <!-- OR manual -->
+        <div style="text-align:center;margin:14px 0;color:var(--text3);font-size:13px;display:flex;align-items:center;gap:10px">
+          <div style="flex:1;height:1px;background:var(--border)"></div>ya da manuel gir<div style="flex:1;height:1px;background:var(--border)"></div>
+        </div>
+        <button class="btn btn-ghost btn-sm btn-block" onclick="showManualMeal()">✏️ Manuel Ekle</button>
       </div>
-      <div class="fg"><label class="fl">Kategori</label>
-        <select id="mcat" class="fi">
-          <option value="kahvaltı">🌅 Kahvaltı</option>
-          <option value="öğle">🍽️ Öğle</option>
-          <option value="akşam">🌙 Akşam</option>
-          <option value="atıştırmalık">🍿 Atıştırmalık</option>
-        </select>
+
+      <!-- STEP 2: Portion selector (shown after food picked) -->
+      <div id="meal-step-portion" style="display:none">
+        <!-- Selected food info -->
+        <div id="meal-selected-card" style="background:var(--bg3);border-radius:14px;padding:14px;margin-bottom:16px;border:1.5px solid var(--accent)">
+          <div style="font-size:16px;font-weight:700;margin-bottom:4px" id="msc-name"></div>
+          <div style="font-size:12px;color:var(--text2)" id="msc-per100">100g başına: — kcal</div>
+        </div>
+        <!-- Portion buttons -->
+        <div class="fg">
+          <label class="fl">Porsiyon Seç</label>
+          <div id="portion-btns" style="display:flex;flex-direction:column;gap:8px"></div>
+        </div>
+        <!-- Custom gram -->
+        <div class="fg">
+          <label class="fl">Ya da Gram Gir</label>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input type="number" id="mcustom-g" class="fi" placeholder="150" min="1" inputmode="numeric"
+              style="flex:1" oninput="onCustomGram(this.value)">
+            <span style="color:var(--text2);font-size:14px;white-space:nowrap" id="mcustom-unit">g</span>
+          </div>
+        </div>
+        <!-- Live nutrition preview -->
+        <div id="meal-nutrition-preview" style="background:var(--bg3);border-radius:14px;padding:14px;margin-bottom:16px;display:none">
+          <div style="font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">Hesaplanan Değerler</div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;text-align:center">
+            <div style="background:var(--bg2);border-radius:10px;padding:10px 4px">
+              <div class="num-font" style="font-size:18px;font-weight:700;color:var(--accent2)" id="prev-kcal">0</div>
+              <div style="font-size:9px;color:var(--text2);text-transform:uppercase;margin-top:2px">kcal</div>
+            </div>
+            <div style="background:var(--bg2);border-radius:10px;padding:10px 4px">
+              <div class="num-font" style="font-size:18px;font-weight:700;color:var(--red)" id="prev-p">0g</div>
+              <div style="font-size:9px;color:var(--text2);text-transform:uppercase;margin-top:2px">protein</div>
+            </div>
+            <div style="background:var(--bg2);border-radius:10px;padding:10px 4px">
+              <div class="num-font" style="font-size:18px;font-weight:700;color:var(--orange)" id="prev-c">0g</div>
+              <div style="font-size:9px;color:var(--text2);text-transform:uppercase;margin-top:2px">karb</div>
+            </div>
+            <div style="background:var(--bg2);border-radius:10px;padding:10px 4px">
+              <div class="num-font" style="font-size:18px;font-weight:700;color:var(--green)" id="prev-f">0g</div>
+              <div style="font-size:9px;color:var(--text2);text-transform:uppercase;margin-top:2px">yağ</div>
+            </div>
+          </div>
+        </div>
+        <div class="fg">
+          <label class="fl">Kategori</label>
+          <select id="mcat" class="fi">
+            <option value="kahvaltı">🌅 Kahvaltı</option>
+            <option value="öğle">🍽️ Öğle</option>
+            <option value="akşam">🌙 Akşam</option>
+            <option value="atıştırmalık">🍿 Atıştırmalık</option>
+          </select>
+        </div>
+        <div class="fg"><label class="fl">Not (opsiyonel)</label><textarea id="mnot" class="fi" placeholder="Ekstra not..." style="min-height:60px"></textarea></div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-ghost" onclick="resetMealSheet()" style="min-width:80px">← Geri</button>
+          <button class="btn btn-primary" style="flex:1" id="meal-save-btn" onclick="saveMeal()" disabled>💾 Kaydet</button>
+        </div>
       </div>
-      <div class="form-grid-2">
-        <div class="fg"><label class="fl">Kalori (kcal)</label><input type="number" id="mkcal" class="fi" placeholder="0" min="0" inputmode="numeric"></div>
-        <div class="fg"><label class="fl">Porsiyon (g)</label><input type="number" id="mpor" class="fi" placeholder="100" min="0" inputmode="numeric"></div>
+
+      <!-- STEP 3: Manual form -->
+      <div id="meal-step-manual" style="display:none">
+        <div class="fg"><label class="fl">Yemek Adı</label><input type="text" id="mn" class="fi" placeholder="örn: Ev Yemeği"></div>
+        <div class="fg"><label class="fl">Kategori</label>
+          <select id="mcat-manual" class="fi">
+            <option value="kahvaltı">🌅 Kahvaltı</option>
+            <option value="öğle">🍽️ Öğle</option>
+            <option value="akşam">🌙 Akşam</option>
+            <option value="atıştırmalık">🍿 Atıştırmalık</option>
+          </select>
+        </div>
+        <div class="form-grid-2">
+          <div class="fg"><label class="fl">Kalori (kcal)</label><input type="number" id="mkcal" class="fi" placeholder="0" min="0" inputmode="numeric"></div>
+          <div class="fg"><label class="fl">Miktar (g/ml)</label><input type="number" id="mpor" class="fi" placeholder="100" min="0" inputmode="numeric"></div>
+        </div>
+        <div class="form-grid-3">
+          <div class="fg"><label class="fl">Protein (g)</label><input type="number" id="mpro" class="fi" placeholder="0" min="0" step="0.1" inputmode="decimal"></div>
+          <div class="fg"><label class="fl">Karb (g)</label><input type="number" id="mcar" class="fi" placeholder="0" min="0" step="0.1" inputmode="decimal"></div>
+          <div class="fg"><label class="fl">Yağ (g)</label><input type="number" id="mfat" class="fi" placeholder="0" min="0" step="0.1" inputmode="decimal"></div>
+        </div>
+        <div class="fg"><label class="fl">Not</label><textarea id="mnot-manual" class="fi" placeholder="Ekstra not..." style="min-height:60px"></textarea></div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-ghost" onclick="resetMealSheet()" style="min-width:80px">← Geri</button>
+          <button class="btn btn-primary" style="flex:1" onclick="saveManualMeal()">💾 Kaydet</button>
+        </div>
       </div>
-      <div class="form-grid-3">
-        <div class="fg"><label class="fl">Protein</label><input type="number" id="mpro" class="fi" placeholder="0" min="0" step="0.1" inputmode="decimal"></div>
-        <div class="fg"><label class="fl">Karb</label><input type="number" id="mcar" class="fi" placeholder="0" min="0" step="0.1" inputmode="decimal"></div>
-        <div class="fg"><label class="fl">Yağ</label><input type="number" id="mfat" class="fi" placeholder="0" min="0" step="0.1" inputmode="decimal"></div>
-      </div>
-      <div class="fg"><label class="fl">Not</label><textarea id="mnot" class="fi" placeholder="Ekstra not..."></textarea></div>
-      <button class="btn btn-primary btn-block" onclick="saveMeal()">💾 Kaydet</button>
+
     </div>
   </div>
 </div>
@@ -1057,23 +1184,263 @@ let MEALS=[], WKTS=[], POSTS=[], NOTIFS=[], FRIENDS=[], FREQ=[];
 let selInt='med', mealCatFilter='', feedTab='home';
 let c1=null,c2=null,c3=null, exCnt=0;
 
+
+// MEAL_DB - 100 yemek | cal/p/c/f = 100g/ml başına | portions = porsiyon seçenekleri
 const MEAL_DB=[
-  {name:'Tavuk Göğsü',cal:165,p:31,c:0,f:3.6},
-  {name:'Pirinç Pilavı',cal:130,p:2.7,c:28,f:0.3},
-  {name:'Yumurta (1 adet)',cal:78,p:6.3,c:0.6,f:5.3},
-  {name:'Beyaz Ekmek (1 dilim)',cal:79,p:2.7,c:14.4,f:1},
-  {name:'Mercimek Çorbası',cal:116,p:7,c:20,f:1},
-  {name:'Köfte (100g)',cal:230,p:18,c:8,f:15},
-  {name:'Yoğurt (100g)',cal:61,p:3.5,c:4.7,f:3.3},
-  {name:'Muz (1 adet)',cal:89,p:1.1,c:23,f:0.3},
-  {name:'Elma (1 adet)',cal:52,p:0.3,c:14,f:0.2},
-  {name:'Somon (100g)',cal:208,p:20,c:0,f:13},
-  {name:'Salata (100g)',cal:20,p:1,c:4,f:0.2},
-  {name:'Makarna (100g kuru)',cal:371,p:13,c:74,f:1.5},
-  {name:'Peynir (30g)',cal:106,p:6.5,c:0.4,f:9},
-  {name:'Süt (1 bardak)',cal:60,p:3.2,c:4.8,f:3.2},
-  {name:'Zeytinyağı (1 çorba k.)',cal:120,p:0,c:0,f:14},
+// ── TÜRK ANA YEMEKLERİ ──────────────────────────────────────────────
+{name:'Mantı',cat:'akşam',cal:255,p:11,c:32,f:9,unit:'g',
+ portions:[{l:'1 kase (200g)',g:200},{l:'2 kase (400g)',g:400},{l:'Küçük (150g)',g:150},{l:'Büyük (300g)',g:300}]},
+{name:'Kuru Fasulye',cat:'akşam',cal:127,p:8.7,c:22,f:0.5,unit:'g',
+ portions:[{l:'1 kase (250g)',g:250},{l:'Küçük (180g)',g:180},{l:'Büyük (350g)',g:350}]},
+{name:'Mercimek Çorbası',cat:'akşam',cal:116,p:7,c:20,f:1,unit:'ml',
+ portions:[{l:'1 kase (300ml)',g:300},{l:'Küçük (200ml)',g:200},{l:'Büyük (400ml)',g:400}]},
+{name:'İzmir Köfte',cat:'akşam',cal:230,p:18,c:8,f:15,unit:'g',
+ portions:[{l:'3 adet (90g)',g:90},{l:'5 adet (150g)',g:150},{l:'2 adet (60g)',g:60}]},
+{name:'Köfte (ortak)',cat:'akşam',cal:230,p:18,c:8,f:15,unit:'g',
+ portions:[{l:'3 adet (90g)',g:90},{l:'5 adet (150g)',g:150},{l:'2 adet (60g)',g:60}]},
+{name:'İmam Bayıldı',cat:'akşam',cal:147,p:2,c:14,f:9,unit:'g',
+ portions:[{l:'1 porsiyon (250g)',g:250},{l:'Küçük (180g)',g:180}]},
+{name:'Zeytinyağlı Fasulye',cat:'akşam',cal:110,p:4,c:12,f:5,unit:'g',
+ portions:[{l:'1 porsiyon (250g)',g:250},{l:'Yarım (130g)',g:130}]},
+{name:'Karnıyarık',cat:'akşam',cal:165,p:10,c:12,f:8,unit:'g',
+ portions:[{l:'1 porsiyon (300g)',g:300},{l:'Küçük (200g)',g:200}]},
+{name:'Dolma (yaprak)',cat:'akşam',cal:134,p:4,c:18,f:5,unit:'g',
+ portions:[{l:'10 adet (200g)',g:200},{l:'5 adet (100g)',g:100},{l:'15 adet (300g)',g:300}]},
+{name:'Mücver',cat:'akşam',cal:180,p:7,c:16,f:9,unit:'g',
+ portions:[{l:'3 adet (150g)',g:150},{l:'2 adet (100g)',g:100},{l:'5 adet (250g)',g:250}]},
+{name:'Patates Yemeği',cat:'akşam',cal:143,p:3,c:20,f:6,unit:'g',
+ portions:[{l:'1 tabak (300g)',g:300},{l:'Küçük (200g)',g:200}]},
+{name:'Etli Nohut',cat:'akşam',cal:165,p:11,c:18,f:5,unit:'g',
+ portions:[{l:'1 kase (280g)',g:280},{l:'Küçük (200g)',g:200},{l:'Büyük (380g)',g:380}]},
+{name:'Güveç (et)',cat:'akşam',cal:180,p:16,c:8,f:9,unit:'g',
+ portions:[{l:'1 porsiyon (300g)',g:300},{l:'Küçük (200g)',g:200}]},
+{name:'Tarhana Çorbası',cat:'akşam',cal:72,p:2.5,c:13,f:1.2,unit:'ml',
+ portions:[{l:'1 kase (300ml)',g:300},{l:'Küçük (200ml)',g:200}]},
+{name:'Ezogelin Çorbası',cat:'akşam',cal:85,p:4,c:14,f:1.5,unit:'ml',
+ portions:[{l:'1 kase (300ml)',g:300},{l:'Küçük (200ml)',g:200}]},
+{name:'Domates Çorbası',cat:'akşam',cal:55,p:1.5,c:9,f:1.5,unit:'ml',
+ portions:[{l:'1 kase (300ml)',g:300},{l:'Küçük (200ml)',g:200}]},
+{name:'Tavuk Çorbası',cat:'akşam',cal:60,p:5,c:6,f:1.5,unit:'ml',
+ portions:[{l:'1 kase (300ml)',g:300},{l:'Büyük (400ml)',g:400}]},
+{name:'Şehriyeli Çorba',cat:'akşam',cal:70,p:2.5,c:12,f:1.5,unit:'ml',
+ portions:[{l:'1 kase (300ml)',g:300},{l:'Küçük (200ml)',g:200}]},
+
+// ── ET & TAVUK ───────────────────────────────────────────────────────
+{name:'Tavuk Göğsü (ızgara)',cat:'öğle',cal:165,p:31,c:0,f:3.6,unit:'g',
+ portions:[{l:'1 porsiyon (120g)',g:120},{l:'Küçük (80g)',g:80},{l:'Büyük (200g)',g:200}]},
+{name:'Tavuk But (ızgara)',cat:'öğle',cal:190,p:26,c:0,f:9,unit:'g',
+ portions:[{l:'1 but (150g)',g:150},{l:'Küçük (100g)',g:100},{l:'Büyük (220g)',g:220}]},
+{name:'Tavuk But (fırın)',cat:'akşam',cal:215,p:25,c:0,f:13,unit:'g',
+ portions:[{l:'1 but (180g)',g:180},{l:'2 but (360g)',g:360}]},
+{name:'Döner (tavuk)',cat:'öğle',cal:220,p:20,c:5,f:13,unit:'g',
+ portions:[{l:'1 porsiyon (200g)',g:200},{l:'Yarım (100g)',g:100},{l:'Büyük (300g)',g:300}]},
+{name:'Döner (et)',cat:'öğle',cal:280,p:22,c:4,f:19,unit:'g',
+ portions:[{l:'1 porsiyon (200g)',g:200},{l:'Yarım (100g)',g:100},{l:'Büyük (300g)',g:300}]},
+{name:'Adana Kebap',cat:'akşam',cal:260,p:20,c:3,f:19,unit:'g',
+ portions:[{l:'1 porsiyon (200g)',g:200},{l:'Küçük (150g)',g:150},{l:'Büyük (280g)',g:280}]},
+{name:'Urfa Kebap',cat:'akşam',cal:245,p:19,c:4,f:17,unit:'g',
+ portions:[{l:'1 porsiyon (200g)',g:200},{l:'Küçük (150g)',g:150}]},
+{name:'Şiş Kebap',cat:'akşam',cal:215,p:22,c:0,f:14,unit:'g',
+ portions:[{l:'1 şiş (150g)',g:150},{l:'2 şiş (300g)',g:300}]},
+{name:'Sığır Biftek',cat:'akşam',cal:242,p:26,c:0,f:15,unit:'g',
+ portions:[{l:'1 porsiyon (180g)',g:180},{l:'Küçük (120g)',g:120},{l:'Büyük (250g)',g:250}]},
+{name:'Somon (ızgara)',cat:'akşam',cal:208,p:20,c:0,f:13,unit:'g',
+ portions:[{l:'1 fileto (150g)',g:150},{l:'Küçük (100g)',g:100},{l:'Büyük (220g)',g:220}]},
+{name:'Balık (ızgara)',cat:'akşam',cal:140,p:26,c:0,f:4,unit:'g',
+ portions:[{l:'1 porsiyon (180g)',g:180},{l:'Küçük (120g)',g:120},{l:'Büyük (250g)',g:250}]},
+{name:'Karides (haşlama)',cat:'akşam',cal:99,p:21,c:0,f:1,unit:'g',
+ portions:[{l:'1 porsiyon (150g)',g:150},{l:'Küçük (100g)',g:100}]},
+
+// ── PİLAV & MAKARNA ──────────────────────────────────────────────────
+{name:'Pirinç Pilavı',cat:'akşam',cal:130,p:2.7,c:28,f:0.3,unit:'g',
+ portions:[{l:'1 kepçe (150g)',g:150},{l:'2 kepçe (300g)',g:300},{l:'Yarım kepçe (80g)',g:80}]},
+{name:'Bulgur Pilavı',cat:'akşam',cal:83,p:3,c:18,f:0.2,unit:'g',
+ portions:[{l:'1 kepçe (150g)',g:150},{l:'2 kepçe (300g)',g:300},{l:'Yarım (80g)',g:80}]},
+{name:'Makarna (sade)',cat:'akşam',cal:131,p:5,c:25,f:1.1,unit:'g',
+ portions:[{l:'1 tabak (220g)',g:220},{l:'Küçük (150g)',g:150},{l:'Büyük (300g)',g:300}]},
+{name:'Kıymalı Makarna',cat:'akşam',cal:185,p:12,c:22,f:6,unit:'g',
+ portions:[{l:'1 tabak (300g)',g:300},{l:'Küçük (200g)',g:200},{l:'Büyük (400g)',g:400}]},
+{name:'Fettuccine Alfredo',cat:'akşam',cal:220,p:8,c:28,f:9,unit:'g',
+ portions:[{l:'1 tabak (280g)',g:280},{l:'Küçük (180g)',g:180}]},
+{name:'Patates Püresi',cat:'akşam',cal:113,p:2,c:17,f:4,unit:'g',
+ portions:[{l:'1 porsiyon (200g)',g:200},{l:'Küçük (130g)',g:130},{l:'Büyük (280g)',g:280}]},
+{name:'Patates Kızartması',cat:'atıştırmalık',cal:312,p:3.4,c:41,f:15,unit:'g',
+ portions:[{l:'Küçük (100g)',g:100},{l:'Orta (150g)',g:150},{l:'Büyük (200g)',g:200}]},
+{name:'Fırın Patates',cat:'akşam',cal:93,p:2.5,c:21,f:0.1,unit:'g',
+ portions:[{l:'1 adet (200g)',g:200},{l:'2 adet (400g)',g:400}]},
+
+// ── KAHVALTI ─────────────────────────────────────────────────────────
+{name:'Yumurta (haşlanmış)',cat:'kahvaltı',cal:155,p:12,c:1.1,f:11,unit:'g',
+ portions:[{l:'1 adet (55g)',g:55},{l:'2 adet (110g)',g:110},{l:'3 adet (165g)',g:165}]},
+{name:'Yumurta (sahanda)',cat:'kahvaltı',cal:196,p:14,c:0.4,f:15,unit:'g',
+ portions:[{l:'2 yumurta (100g)',g:100},{l:'1 yumurta (50g)',g:50},{l:'3 yumurta (150g)',g:150}]},
+{name:'Omlet (sade)',cat:'kahvaltı',cal:154,p:10,c:1,f:12,unit:'g',
+ portions:[{l:'1 porsiyon (120g)',g:120},{l:'Büyük (180g)',g:180}]},
+{name:'Menemen',cat:'kahvaltı',cal:125,p:7,c:8,f:7,unit:'g',
+ portions:[{l:'1 porsiyon (200g)',g:200},{l:'Küçük (130g)',g:130},{l:'Büyük (280g)',g:280}]},
+{name:'Beyaz Peynir',cat:'kahvaltı',cal:264,p:17,c:2,f:21,unit:'g',
+ portions:[{l:'2 dilim (50g)',g:50},{l:'1 dilim (25g)',g:25},{l:'3 dilim (75g)',g:75}]},
+{name:'Kaşar Peyniri',cat:'kahvaltı',cal:380,p:25,c:2,f:30,unit:'g',
+ portions:[{l:'2 dilim (40g)',g:40},{l:'1 dilim (20g)',g:20},{l:'3 dilim (60g)',g:60}]},
+{name:'Zeytin',cat:'kahvaltı',cal:145,p:1,c:4,f:15,unit:'g',
+ portions:[{l:'10 adet (30g)',g:30},{l:'5 adet (15g)',g:15},{l:'20 adet (60g)',g:60}]},
+{name:'Beyaz Ekmek',cat:'kahvaltı',cal:265,p:9,c:49,f:3.2,unit:'g',
+ portions:[{l:'1 dilim (35g)',g:35},{l:'2 dilim (70g)',g:70},{l:'3 dilim (105g)',g:105}]},
+{name:'Tam Buğday Ekmek',cat:'kahvaltı',cal:247,p:13,c:41,f:4.2,unit:'g',
+ portions:[{l:'1 dilim (35g)',g:35},{l:'2 dilim (70g)',g:70},{l:'3 dilim (105g)',g:105}]},
+{name:'Simit',cat:'kahvaltı',cal:297,p:10,c:55,f:5,unit:'g',
+ portions:[{l:'1 adet (140g)',g:140},{l:'Yarım (70g)',g:70}]},
+{name:'Poğaça',cat:'kahvaltı',cal:335,p:8,c:42,f:15,unit:'g',
+ portions:[{l:'1 adet (80g)',g:80},{l:'2 adet (160g)',g:160}]},
+{name:'Börek (peynirli)',cat:'kahvaltı',cal:310,p:11,c:28,f:17,unit:'g',
+ portions:[{l:'1 dilim (120g)',g:120},{l:'2 dilim (240g)',g:240}]},
+{name:'Börek (kıymalı)',cat:'kahvaltı',cal:290,p:13,c:26,f:15,unit:'g',
+ portions:[{l:'1 dilim (120g)',g:120},{l:'2 dilim (240g)',g:240}]},
+{name:'Bal',cat:'kahvaltı',cal:304,p:0.3,c:82,f:0,unit:'g',
+ portions:[{l:'1 tatlı kaşığı (10g)',g:10},{l:'1 çorba kaşığı (20g)',g:20}]},
+{name:'Kaymak',cat:'kahvaltı',cal:380,p:3,c:4,f:39,unit:'g',
+ portions:[{l:'2 kaşık (40g)',g:40},{l:'1 kaşık (20g)',g:20}]},
+{name:'Reçel',cat:'kahvaltı',cal:250,p:0.4,c:65,f:0.1,unit:'g',
+ portions:[{l:'1 tatlı kaşığı (15g)',g:15},{l:'2 tatlı kaşığı (30g)',g:30}]},
+{name:'Tereyağı',cat:'kahvaltı',cal:717,p:0.9,c:0.1,f:81,unit:'g',
+ portions:[{l:'1 tatlı kaşığı (10g)',g:10},{l:'2 tatlı kaşığı (20g)',g:20}]},
+{name:'Fıstık Ezmesi',cat:'kahvaltı',cal:588,p:25,c:20,f:50,unit:'g',
+ portions:[{l:'1 çorba kaşığı (30g)',g:30},{l:'2 kaşık (60g)',g:60}]},
+
+// ── SÜT & YOĞURT ────────────────────────────────────────────────────
+{name:'Süt (tam yağlı)',cat:'kahvaltı',cal:61,p:3.2,c:4.8,f:3.2,unit:'ml',
+ portions:[{l:'1 bardak (200ml)',g:200},{l:'1 büyük bardak (300ml)',g:300}]},
+{name:'Süt (yağsız)',cat:'kahvaltı',cal:35,p:3.4,c:5,f:0.1,unit:'ml',
+ portions:[{l:'1 bardak (200ml)',g:200},{l:'Büyük (300ml)',g:300}]},
+{name:'Yoğurt (tam yağlı)',cat:'kahvaltı',cal:61,p:3.5,c:4.7,f:3.3,unit:'g',
+ portions:[{l:'1 kase (200g)',g:200},{l:'2 kaşık (60g)',g:60},{l:'Büyük (300g)',g:300}]},
+{name:'Yoğurt (light)',cat:'kahvaltı',cal:40,p:4,c:5,f:0.5,unit:'g',
+ portions:[{l:'1 kase (200g)',g:200},{l:'Büyük (300g)',g:300}]},
+{name:'Ayran',cat:'kahvaltı',cal:36,p:2,c:3,f:1.5,unit:'ml',
+ portions:[{l:'1 bardak (250ml)',g:250},{l:'Küçük (200ml)',g:200},{l:'Büyük (350ml)',g:350}]},
+{name:'Kefir',cat:'kahvaltı',cal:41,p:3.3,c:4.5,f:1,unit:'ml',
+ portions:[{l:'1 bardak (240ml)',g:240},{l:'Büyük (350ml)',g:350}]},
+
+// ── MEYVE ────────────────────────────────────────────────────────────
+{name:'Muz',cat:'atıştırmalık',cal:89,p:1.1,c:23,f:0.3,unit:'g',
+ portions:[{l:'1 adet (120g)',g:120},{l:'Küçük (80g)',g:80},{l:'Büyük (160g)',g:160}]},
+{name:'Elma',cat:'atıştırmalık',cal:52,p:0.3,c:14,f:0.2,unit:'g',
+ portions:[{l:'1 adet (182g)',g:182},{l:'Küçük (120g)',g:120},{l:'Büyük (250g)',g:250}]},
+{name:'Portakal',cat:'atıştırmalık',cal:47,p:0.9,c:12,f:0.1,unit:'g',
+ portions:[{l:'1 adet (150g)',g:150},{l:'Küçük (100g)',g:100},{l:'Büyük (200g)',g:200}]},
+{name:'Karpuz',cat:'atıştırmalık',cal:30,p:0.6,c:8,f:0.2,unit:'g',
+ portions:[{l:'1 dilim (300g)',g:300},{l:'2 dilim (600g)',g:600},{l:'Küçük dilim (200g)',g:200}]},
+{name:'Kavun',cat:'atıştırmalık',cal:34,p:0.8,c:8,f:0.2,unit:'g',
+ portions:[{l:'1 dilim (250g)',g:250},{l:'Küçük dilim (150g)',g:150}]},
+{name:'Üzüm',cat:'atıştırmalık',cal:69,p:0.7,c:18,f:0.2,unit:'g',
+ portions:[{l:'1 salkım (150g)',g:150},{l:'Küçük (80g)',g:80},{l:'Büyük (250g)',g:250}]},
+{name:'Çilek',cat:'atıştırmalık',cal:32,p:0.7,c:8,f:0.3,unit:'g',
+ portions:[{l:'1 avuç (100g)',g:100},{l:'2 avuç (200g)',g:200}]},
+{name:'Armut',cat:'atıştırmalık',cal:57,p:0.4,c:15,f:0.1,unit:'g',
+ portions:[{l:'1 adet (178g)',g:178},{l:'Küçük (120g)',g:120}]},
+{name:'Mandalina',cat:'atıştırmalık',cal:53,p:0.8,c:13,f:0.3,unit:'g',
+ portions:[{l:'2 adet (150g)',g:150},{l:'1 adet (75g)',g:75}]},
+{name:'Şeftali',cat:'atıştırmalık',cal:39,p:0.9,c:10,f:0.3,unit:'g',
+ portions:[{l:'1 adet (150g)',g:150},{l:'2 adet (300g)',g:300}]},
+{name:'Kiraz',cat:'atıştırmalık',cal:63,p:1.1,c:16,f:0.2,unit:'g',
+ portions:[{l:'1 avuç (100g)',g:100},{l:'2 avuç (200g)',g:200}]},
+
+// ── KURUYEMIŞ & ATIŞTILIK ────────────────────────────────────────────
+{name:'Badem',cat:'atıştırmalık',cal:579,p:21,c:22,f:50,unit:'g',
+ portions:[{l:'1 avuç (30g)',g:30},{l:'Küçük avuç (15g)',g:15},{l:'2 avuç (60g)',g:60}]},
+{name:'Ceviz',cat:'atıştırmalık',cal:654,p:15,c:14,f:65,unit:'g',
+ portions:[{l:'3-4 adet (30g)',g:30},{l:'5-6 adet (50g)',g:50}]},
+{name:'Fındık',cat:'atıştırmalık',cal:628,p:15,c:17,f:61,unit:'g',
+ portions:[{l:'1 avuç (30g)',g:30},{l:'2 avuç (60g)',g:60}]},
+{name:'Antep Fıstığı',cat:'atıştırmalık',cal:562,p:20,c:28,f:45,unit:'g',
+ portions:[{l:'1 avuç (30g)',g:30},{l:'2 avuç (60g)',g:60}]},
+{name:'Kaju',cat:'atıştırmalık',cal:553,p:18,c:30,f:44,unit:'g',
+ portions:[{l:'1 avuç (30g)',g:30},{l:'2 avuç (60g)',g:60}]},
+{name:'Leblebi',cat:'atıştırmalık',cal:364,p:19,c:61,f:5,unit:'g',
+ portions:[{l:'1 avuç (40g)',g:40},{l:'2 avuç (80g)',g:80}]},
+{name:'Mısır (patlamış)',cat:'atıştırmalık',cal:375,p:11,c:74,f:4,unit:'g',
+ portions:[{l:'1 kase (30g)',g:30},{l:'2 kase (60g)',g:60}]},
+{name:'Çikolata (sütlü)',cat:'atıştırmalık',cal:535,p:7,c:60,f:30,unit:'g',
+ portions:[{l:'2 kare (20g)',g:20},{l:'4 kare (40g)',g:40},{l:'Yarım tablet (50g)',g:50}]},
+{name:'Çikolata (bitter)',cat:'atıştırmalık',cal:546,p:5,c:60,f:32,unit:'g',
+ portions:[{l:'2 kare (20g)',g:20},{l:'4 kare (40g)',g:40},{l:'Yarım tablet (50g)',g:50}]},
+{name:'Gofret',cat:'atıştırmalık',cal:490,p:6,c:62,f:24,unit:'g',
+ portions:[{l:'1 adet (35g)',g:35},{l:'2 adet (70g)',g:70}]},
+{name:'Bisküvi (sade)',cat:'atıştırmalık',cal:428,p:7,c:72,f:13,unit:'g',
+ portions:[{l:'3 adet (30g)',g:30},{l:'6 adet (60g)',g:60}]},
+
+// ── FAST FOOD & HAZIR ────────────────────────────────────────────────
+{name:'Pizza Dilimi (karışık)',cat:'akşam',cal:266,p:11,c:33,f:10,unit:'g',
+ portions:[{l:'1 dilim (107g)',g:107},{l:'2 dilim (214g)',g:214},{l:'3 dilim (321g)',g:321}]},
+{name:'Hamburger',cat:'öğle',cal:295,p:17,c:24,f:14,unit:'g',
+ portions:[{l:'1 adet (180g)',g:180},{l:'Büyük (220g)',g:220}]},
+{name:'Dürüm (tavuk)',cat:'öğle',cal:215,p:15,c:26,f:6,unit:'g',
+ portions:[{l:'1 adet (250g)',g:250},{l:'Büyük (320g)',g:320}]},
+{name:'Lahmacun',cat:'öğle',cal:235,p:10,c:30,f:8,unit:'g',
+ portions:[{l:'1 adet (200g)',g:200},{l:'2 adet (400g)',g:400}]},
+{name:'Pide (kaşarlı)',cat:'akşam',cal:270,p:11,c:35,f:10,unit:'g',
+ portions:[{l:'Yarım pide (250g)',g:250},{l:'Tam pide (500g)',g:500}]},
+{name:'Pide (kıymalı)',cat:'akşam',cal:265,p:13,c:32,f:9,unit:'g',
+ portions:[{l:'Yarım pide (250g)',g:250},{l:'Tam pide (500g)',g:500}]},
+{name:'Sandviç (ton balıklı)',cat:'öğle',cal:218,p:14,c:25,f:6,unit:'g',
+ portions:[{l:'1 adet (200g)',g:200},{l:'Yarım (100g)',g:100}]},
+{name:'Gözleme (peynirli)',cat:'kahvaltı',cal:265,p:10,c:32,f:11,unit:'g',
+ portions:[{l:'1 adet (180g)',g:180},{l:'2 adet (360g)',g:360}]},
+
+// ── TATLI ────────────────────────────────────────────────────────────
+{name:'Baklava',cat:'atıştırmalık',cal:428,p:7,c:50,f:22,unit:'g',
+ portions:[{l:'1 dilim (70g)',g:70},{l:'2 dilim (140g)',g:140}]},
+{name:'Sütlaç',cat:'atıştırmalık',cal:140,p:4,c:25,f:3,unit:'g',
+ portions:[{l:'1 kase (200g)',g:200},{l:'Küçük (150g)',g:150}]},
+{name:'Muhallebi',cat:'atıştırmalık',cal:130,p:3.5,c:22,f:3,unit:'g',
+ portions:[{l:'1 kase (200g)',g:200},{l:'Küçük (150g)',g:150}]},
+{name:'Dondurma (vanilyalı)',cat:'atıştırmalık',cal:207,p:3.5,c:24,f:11,unit:'g',
+ portions:[{l:'1 top (80g)',g:80},{l:'2 top (160g)',g:160},{l:'Küçük (60g)',g:60}]},
+{name:'Profiterol',cat:'atıştırmalık',cal:340,p:6,c:35,f:20,unit:'g',
+ portions:[{l:'1 porsiyon (120g)',g:120},{l:'Küçük (80g)',g:80}]},
+{name:'Künefe',cat:'atıştırmalık',cal:385,p:8,c:42,f:21,unit:'g',
+ portions:[{l:'1 porsiyon (150g)',g:150},{l:'Küçük (100g)',g:100}]},
+
+// ── İÇECEK ───────────────────────────────────────────────────────────
+{name:'Türk Kahvesi (sade)',cat:'kahvaltı',cal:2,p:0.1,c:0.3,f:0,unit:'ml',
+ portions:[{l:'1 fincan (60ml)',g:60},{l:'2 fincan (120ml)',g:120}]},
+{name:'Türk Kahvesi (şekerli)',cat:'kahvaltı',cal:20,p:0.1,c:4.8,f:0,unit:'ml',
+ portions:[{l:'1 fincan (60ml)',g:60},{l:'2 fincan (120ml)',g:120}]},
+{name:'Çay (şekersiz)',cat:'kahvaltı',cal:1,p:0,c:0.2,f:0,unit:'ml',
+ portions:[{l:'1 bardak (200ml)',g:200},{l:'2 bardak (400ml)',g:400}]},
+{name:'Çay (şekerli, 2 kesme)',cat:'kahvaltı',cal:32,p:0,c:8,f:0,unit:'ml',
+ portions:[{l:'1 bardak (200ml)',g:200},{l:'2 bardak (400ml)',g:400}]},
+{name:'Neskafe (sütsüz)',cat:'kahvaltı',cal:4,p:0.5,c:0.7,f:0,unit:'ml',
+ portions:[{l:'1 bardak (200ml)',g:200}]},
+{name:'Portakal Suyu (taze)',cat:'kahvaltı',cal:45,p:0.7,c:10,f:0.2,unit:'ml',
+ portions:[{l:'1 bardak (200ml)',g:200},{l:'Büyük (300ml)',g:300}]},
+{name:'Kola (gazlı içecek)',cat:'atıştırmalık',cal:42,p:0,c:11,f:0,unit:'ml',
+ portions:[{l:'1 kutu (330ml)',g:330},{l:'Şişe (500ml)',g:500},{l:'Küçük (200ml)',g:200}]},
+{name:'Meyve Suyu (hazır)',cat:'atıştırmalık',cal:46,p:0.5,c:11,f:0.1,unit:'ml',
+ portions:[{l:'1 bardak (200ml)',g:200},{l:'1 paket (250ml)',g:250}]},
+{name:'Protein Shake',cat:'kahvaltı',cal:120,p:24,c:4,f:1.5,unit:'ml',
+ portions:[{l:'1 porsiyon (300ml)',g:300},{l:'Yarım (150ml)',g:150}]},
+{name:'Enerji İçeceği',cat:'atıştırmalık',cal:45,p:0.3,c:11,f:0,unit:'ml',
+ portions:[{l:'1 kutu (250ml)',g:250},{l:'Büyük (500ml)',g:500}]},
+
+// ── SALATA & SEBZE ────────────────────────────────────────────────────
+{name:'Çoban Salatası',cat:'öğle',cal:65,p:2,c:7,f:3.5,unit:'g',
+ portions:[{l:'1 kase (200g)',g:200},{l:'Büyük kase (300g)',g:300}]},
+{name:'Gavurdağı Salatası',cat:'öğle',cal:130,p:3,c:9,f:9,unit:'g',
+ portions:[{l:'1 kase (200g)',g:200},{l:'Büyük (300g)',g:300}]},
+{name:'Tabbule',cat:'öğle',cal:100,p:2.5,c:16,f:3.5,unit:'g',
+ portions:[{l:'1 kase (200g)',g:200},{l:'Küçük (130g)',g:130}]},
+{name:'Haydari',cat:'kahvaltı',cal:110,p:5,c:5,f:8,unit:'g',
+ portions:[{l:'2 kaşık (80g)',g:80},{l:'4 kaşık (160g)',g:160}]},
+{name:'Hummus',cat:'atıştırmalık',cal:166,p:8,c:14,f:10,unit:'g',
+ portions:[{l:'2 çorba kaşığı (60g)',g:60},{l:'4 çorba kaşığı (120g)',g:120}]},
+{name:'Cacık',cat:'akşam',cal:40,p:2.5,c:3,f:2,unit:'g',
+ portions:[{l:'1 kase (200g)',g:200},{l:'Küçük (130g)',g:130}]},
+{name:'Zeytinyağlı Enginar',cat:'akşam',cal:95,p:2,c:10,f:5,unit:'g',
+ portions:[{l:'1 porsiyon (250g)',g:250},{l:'Yarım (130g)',g:130}]},
 ];
+
+
 
 const ACHS=[
   {id:'first_meal',ico:'🎯',name:'İlk Adım',desc:'İlk öğün',chk:s=>s.meals>=1},
@@ -1445,12 +1812,40 @@ async function pushNotif(txt,ico,type){
 
 // ─── SAVE ─────────────────────────────────────────────────────────────────
 async function saveMeal(){
-  const name=v('mn');if(!name){toast('Öğün adı gerekli!');return}
-  const data={name,category:v('mcat'),calories:num('mkcal'),protein:num('mpro'),carbs:num('mcar'),fat:num('mfat'),notes:v('mnot'),createdAt:firebase.firestore.FieldValue.serverTimestamp()};
+  // smart save (from DB search)
+  if(!selectedMealItem||selectedGrams<=0){toast('Porsiyon seçmelisin!');return}
+  const m=selectedMealItem;const g=selectedGrams;const factor=g/100;
+  const data={
+    name:m.name,
+    category:ge('mcat')?.value||m.cat||'akşam',
+    calories:Math.round(m.cal*factor),
+    protein:+(m.p*factor).toFixed(1),
+    carbs:+(m.c*factor).toFixed(1),
+    fat:+(m.f*factor).toFixed(1),
+    grams:g,unit:m.unit,
+    notes:v('mnot'),
+    createdAt:firebase.firestore.FieldValue.serverTimestamp()
+  };
+  await _saveMealData(data);
+}
+async function saveManualMeal(){
+  // manual save
+  const name=v('mn');if(!name){toast('Yemek adı gerekli!');return}
+  const data={
+    name,category:ge('mcat-manual')?.value||'akşam',
+    calories:num('mkcal'),protein:num('mpro'),carbs:num('mcar'),fat:num('mfat'),
+    grams:num('mpor')||100,unit:'g',
+    notes:v('mnot-manual'),
+    createdAt:firebase.firestore.FieldValue.serverTimestamp()
+  };
+  await _saveMealData(data);
+}
+async function _saveMealData(data){
   try{
     const ref=await db.collection('meals').doc(CU.uid).collection('items').add(data);
     MEALS.unshift({id:ref.id,...data,createdAt:new Date()});
-    closeSheet('sh-meal');resetMealForm();renderHome();renderMealsPage();
+    closeSheet('sh-meal');resetMealSheet();resetMealForm();
+    renderHome();renderMealsPage();
     toast('✅ Öğün kaydedildi!');checkAchs();
   }catch(e){toast('Hata: '+e.message);}
 }
@@ -1525,7 +1920,7 @@ function hideTyping(){if(typingNode){typingNode.remove();typingNode=null;}}
 
 // ─── SHEETS ───────────────────────────────────────────────────────────────
 function openAddSheet(){openSheet('sh-add')}
-function openMealSheet(){setupMealDL();openSheet('sh-meal')}
+function openMealSheet(){resetMealSheet();openSheet('sh-meal')}
 function openWorkoutSheet(){resetWktForm();openSheet('sh-workout')}
 function openPostSheet(){ge('pcont').value='';ge('p-chr').textContent='0 / 500';openSheet('sh-post')}
 function openAISheet(){openSheet('sh-ai')}
@@ -1588,15 +1983,121 @@ function setInt(level){
 function resetMealForm(){['mn','mkcal','mpor','mpro','mcar','mfat','mnot'].forEach(id=>{const e=ge(id);if(e)e.value='';})}
 function resetWktForm(){['wn','wdur','wkcal','wnot'].forEach(id=>{const e=ge(id);if(e)e.value=''});ge('ex-list').innerHTML='';exCnt=0;setInt('med');}
 
-// ─── MEAL DATALIST ────────────────────────────────────────────────────────
-function setupMealDL(){
-  const dl=ge('meal-dl');if(!dl)return;
-  dl.innerHTML=MEAL_DB.map(m=>`<option value="${m.name}">`).join('');
-  const inp=ge('mn');if(!inp||inp._setup)return;inp._setup=true;
-  inp.addEventListener('change',()=>{
-    const f=MEAL_DB.find(m=>m.name.toLowerCase()===inp.value.toLowerCase());
-    if(f){ge('mkcal').value=f.cal;ge('mpro').value=f.p;ge('mcar').value=f.c;ge('mfat').value=f.f;}
-  });
+// ─── MEAL SEARCH SYSTEM ───────────────────────────────────────────────────
+let selectedMealItem = null;   // currently picked MEAL_DB entry
+let selectedGrams = 0;         // chosen grams
+
+function setupMealDL(){} // legacy - no longer used
+
+const CAT_ICONS_MEAL={'kahvaltı':'☕','öğle':'🍽️','akşam':'🌙','atıştırmalık':'🍿'};
+const CAT_ICO2={...CAT_ICONS_MEAL};
+
+function onMealSearch(q){
+  const el=ge('meal-search-results');
+  if(!q||q.length<1){el.innerHTML='';return;}
+  const qLow=q.toLowerCase().replace(/i/g,'i').replace(/ı/g,'i');
+  const matches=MEAL_DB.filter(m=>{
+    const n=m.name.toLowerCase().replace(/i̇/g,'i').replace(/ı/g,'i');
+    return n.includes(qLow);
+  }).slice(0,8);
+  if(!matches.length){
+    el.innerHTML='<div class="no-results">Sonuç yok — manuel ekleyebilirsin 👆</div>';return;
+  }
+  el.innerHTML=matches.map(m=>{
+    const ico=CAT_ICONS_MEAL[m.cat]||'🍽️';
+    return`<div class="meal-result-item" onclick="pickMeal('${esc(m.name)}')">
+      <div class="mr-ico">${ico}</div>
+      <div class="mr-info">
+        <div class="mr-name">${esc(m.name)}</div>
+        <div class="mr-macro">${m.p}g P · ${m.c}g K · ${m.f}g Y — 100${m.unit} başına</div>
+      </div>
+      <div class="mr-kcal">${m.cal}<span style="font-size:10px;color:var(--text3)"> kcal</span></div>
+    </div>`;
+  }).join('');
+}
+
+function pickMeal(name){
+  const m=MEAL_DB.find(x=>x.name===name);
+  if(!m)return;
+  selectedMealItem=m;
+  selectedGrams=0;
+  // show step 2
+  ge('meal-step-search').style.display='none';
+  ge('meal-step-portion').style.display='block';
+  ge('meal-step-manual').style.display='none';
+  // fill info card
+  ge('msc-name').textContent=m.name;
+  ge('msc-per100').textContent=`100${m.unit} başına: ${m.cal} kcal · ${m.p}g P · ${m.c}g K · ${m.f}g Y`;
+  ge('mcustom-unit').textContent=m.unit;
+  // set default category
+  const catSel=ge('mcat');
+  if(catSel&&m.cat)catSel.value=m.cat;
+  // render portion buttons
+  const pb=ge('portion-btns');
+  pb.innerHTML=m.portions.map((por,i)=>{
+    const cal=Math.round(m.cal*por.g/100);
+    const p=+(m.p*por.g/100).toFixed(1);
+    const c=+(m.c*por.g/100).toFixed(1);
+    const f=+(m.f*por.g/100).toFixed(1);
+    return`<div class="portion-btn" id="pb-${i}" onclick="selectPortion(${i},${por.g})">
+      <div><div class="pb-label">${esc(por.l)}</div><div class="pb-gram">${p}g P · ${c}g K · ${f}g Y</div></div>
+      <div style="text-align:right"><div class="pb-kcal">${cal}</div><div class="pb-gram">kcal</div></div>
+    </div>`;
+  }).join('');
+  // select first portion by default
+  selectPortion(0, m.portions[0].g);
+  ge('mcustom-g').value='';
+}
+
+function selectPortion(idx,grams){
+  selectedGrams=grams;
+  // visual selection
+  document.querySelectorAll('.portion-btn').forEach(b=>b.classList.remove('sel'));
+  const pb=ge('pb-'+idx);if(pb)pb.classList.add('sel');
+  ge('mcustom-g').value='';
+  updateNutritionPreview(grams);
+}
+
+function onCustomGram(val){
+  const g=parseFloat(val)||0;
+  if(g>0){
+    selectedGrams=g;
+    document.querySelectorAll('.portion-btn').forEach(b=>b.classList.remove('sel'));
+    updateNutritionPreview(g);
+  }
+}
+
+function updateNutritionPreview(grams){
+  if(!selectedMealItem||grams<=0)return;
+  const m=selectedMealItem;
+  const factor=grams/100;
+  const cal=Math.round(m.cal*factor);
+  const p=+(m.p*factor).toFixed(1);
+  const c=+(m.c*factor).toFixed(1);
+  const f=+(m.f*factor).toFixed(1);
+  ge('prev-kcal').textContent=cal;
+  ge('prev-p').textContent=p+'g';
+  ge('prev-c').textContent=c+'g';
+  ge('prev-f').textContent=f+'g';
+  ge('meal-nutrition-preview').style.display='block';
+  ge('meal-save-btn').disabled=false;
+}
+
+function showManualMeal(){
+  ge('meal-step-search').style.display='none';
+  ge('meal-step-portion').style.display='none';
+  ge('meal-step-manual').style.display='block';
+}
+
+function resetMealSheet(){
+  selectedMealItem=null;selectedGrams=0;
+  ge('meal-step-search').style.display='block';
+  ge('meal-step-portion').style.display='none';
+  ge('meal-step-manual').style.display='none';
+  ge('meal-search-inp').value='';
+  ge('meal-search-results').innerHTML='';
+  ge('meal-nutrition-preview').style.display='none';
+  ge('meal-save-btn').disabled=true;
 }
 
 // ─── POST HELPERS ─────────────────────────────────────────────────────────
