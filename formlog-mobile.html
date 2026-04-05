@@ -1,0 +1,1708 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0a0a0f">
+<title>FormLog</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+/* ── RESET & ROOT ─────────────────────────────────────────────────── */
+:root{
+  --bg:#0a0a0f; --bg2:#12121a; --bg3:#1a1a26; --card:#16161f;
+  --border:#252535; --text:#f0f0f8; --text2:#8080a0; --text3:#44445a;
+  --accent:#6c5ce7; --accent2:#a29bfe;
+  --green:#00cec9; --red:#ff6b6b; --orange:#fdcb6e; --pink:#fd79a8;
+  --r:16px; --r2:12px; --r3:10px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bot: env(safe-area-inset-bottom, 0px);
+  --nav-h: calc(68px + var(--safe-bot));
+  --bar-h: calc(56px + var(--safe-top));
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{font-size:16px;height:100%;-webkit-text-size-adjust:100%}
+body{
+  font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);
+  min-height:100%;min-height:100dvh;overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;touch-action:pan-y;
+}
+button{cursor:pointer;font-family:inherit;border:none;outline:none;-webkit-appearance:none;touch-action:manipulation}
+input,textarea,select{font-family:inherit;outline:none;border:none;-webkit-appearance:none;appearance:none}
+a{text-decoration:none;color:inherit}
+img{display:block;max-width:100%}
+h1,h2,h3,h4,h5{font-family:'Syne',sans-serif}
+
+/* prevent double-tap zoom on buttons */
+button,a,[onclick]{touch-action:manipulation}
+
+/* scrollbars */
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px}
+
+/* ── LOADER ───────────────────────────────────────────────────────── */
+#app-loader{
+  position:fixed;inset:0;background:var(--bg);z-index:9999;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;
+}
+.loader-logo{
+  font-family:'Syne',sans-serif;font-size:36px;font-weight:800;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.loader-sub{font-size:14px;color:var(--text3)}
+.loader-bar{width:160px;height:3px;background:var(--border);border-radius:99px;overflow:hidden}
+.loader-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:99px;animation:lf 1.6s ease forwards}
+@keyframes lf{0%{width:0%}100%{width:100%}}
+
+/* ── TOAST ────────────────────────────────────────────────────────── */
+#toast-wrap{
+  position:fixed;bottom:calc(var(--nav-h) + 12px);left:50%;
+  transform:translateX(-50%);z-index:9998;
+  display:flex;flex-direction:column;gap:8px;pointer-events:none;
+  width:calc(100vw - 32px);max-width:340px;
+}
+.toast{
+  background:var(--card);border:1px solid var(--border);color:var(--text);
+  padding:12px 18px;border-radius:14px;font-size:14px;font-weight:500;
+  opacity:0;transform:translateY(8px);transition:all .28s;
+  text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.5);
+}
+.toast.show{opacity:1;transform:translateY(0)}
+
+/* ── BOTTOM SHEET MODALS ──────────────────────────────────────────── */
+.sheet-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.65);
+  backdrop-filter:blur(6px);z-index:500;
+  opacity:0;pointer-events:none;transition:opacity .3s;
+}
+.sheet-overlay.open{opacity:1;pointer-events:all}
+.sheet{
+  position:fixed;bottom:0;left:0;right:0;
+  background:var(--bg2);border-radius:24px 24px 0 0;
+  border-top:1px solid var(--border);
+  max-height:92dvh;display:flex;flex-direction:column;
+  transform:translateY(100%);transition:transform .35s cubic-bezier(.32,1.2,.45,1);
+  z-index:501;padding-bottom:var(--safe-bot);
+}
+.sheet-overlay.open .sheet{transform:translateY(0)}
+.sheet-handle{width:40px;height:4px;background:var(--border);border-radius:99px;margin:12px auto 0}
+.sheet-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 20px;border-bottom:1px solid var(--border);flex-shrink:0;
+}
+.sheet-title{font-size:17px;font-weight:800}
+.sheet-close{
+  width:32px;height:32px;border-radius:50%;background:var(--bg3);
+  color:var(--text2);font-size:18px;
+  display:flex;align-items:center;justify-content:center;
+  min-width:44px;min-height:44px;
+}
+.sheet-body{overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 20px 24px;flex:1}
+/* ensure sheet body scrolls nicely on iOS */
+.sheet-body{overscroll-behavior:contain}
+
+/* ── AUTH ─────────────────────────────────────────────────────────── */
+#auth-screen{
+  min-height:100dvh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:24px 20px calc(24px + var(--safe-bot));
+  position:relative;overflow:hidden;
+}
+.auth-glow{
+  position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(circle at 20% 20%,rgba(108,92,231,.18) 0%,transparent 50%),
+    radial-gradient(circle at 80% 80%,rgba(0,206,201,.12) 0%,transparent 50%);
+}
+.auth-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:24px;padding:28px 24px;
+  width:100%;max-width:400px;position:relative;z-index:1;
+}
+.auth-logo{
+  font-family:'Syne',sans-serif;font-size:30px;font-weight:800;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  text-align:center;margin-bottom:4px;
+}
+.auth-tagline{color:var(--text2);text-align:center;font-size:14px;margin-bottom:24px}
+.tab-row{display:flex;gap:4px;background:var(--bg2);border-radius:12px;padding:4px;margin-bottom:20px}
+.tab-btn{
+  flex:1;padding:10px;border-radius:9px;
+  font-size:14px;font-weight:700;font-family:'Syne',sans-serif;
+  background:transparent;color:var(--text2);transition:all .2s;
+  min-height:44px;
+}
+.tab-btn.active{background:var(--accent);color:#fff}
+
+.fg{margin-bottom:14px}
+.fl{display:block;font-size:11px;font-weight:700;color:var(--text2);margin-bottom:6px;text-transform:uppercase;letter-spacing:.6px}
+.fi{
+  width:100%;background:var(--bg2);border:1.5px solid var(--border);
+  border-radius:12px;padding:14px 16px;color:var(--text);font-size:16px;
+  transition:border-color .2s;min-height:48px;
+}
+.fi:focus{border-color:var(--accent)}
+.fi::placeholder{color:var(--text3)}
+.fi-err{border-color:var(--red)!important}
+.ferr{font-size:12px;color:var(--red);margin-top:5px}
+.fhint{font-size:12px;color:var(--text3);margin-top:5px}
+.pw-bar{height:3px;border-radius:99px;margin-top:6px;transition:all .3s;background:var(--border);width:0%}
+select.fi{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238080a0' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 16px center;
+  padding-right:40px;
+}
+select.fi option{background:var(--bg2)}
+textarea.fi{resize:none;min-height:90px;line-height:1.5}
+
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:14px 24px;border-radius:14px;font-weight:700;font-family:'Syne',sans-serif;
+  font-size:15px;transition:all .15s;min-height:50px;min-width:44px;
+  -webkit-appearance:none;
+}
+.btn-block{width:100%}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}
+.btn-primary:active{opacity:.88;transform:scale(.97)}
+.btn-ghost{background:transparent;color:var(--text2);border:1.5px solid var(--border)}
+.btn-ghost:active{background:var(--bg3)}
+.btn-danger{background:var(--red);color:#fff}
+.btn-sm{padding:9px 18px;font-size:13px;min-height:40px}
+.btn-xs{padding:6px 14px;font-size:12px;min-height:36px}
+.auth-link{text-align:center;margin-top:14px;font-size:14px;color:var(--text2)}
+.auth-link span{color:var(--accent);font-weight:700}
+
+.range-input{-webkit-appearance:none;width:100%;height:6px;background:var(--bg3);border-radius:99px;outline:none;margin:6px 0}
+.range-input::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--accent);cursor:pointer;box-shadow:0 0 0 4px rgba(108,92,231,.2)}
+.range-input::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--accent);border:none}
+
+/* ── MAIN APP ─────────────────────────────────────────────────────── */
+#main-app{display:none;flex-direction:column;height:100dvh;overflow:hidden}
+#main-app.show{display:flex}
+
+/* ── TOPBAR ───────────────────────────────────────────────────────── */
+.topbar{
+  flex-shrink:0;
+  padding:var(--safe-top) 16px 0;
+  height:var(--bar-h);
+  background:rgba(10,10,15,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:flex-end;justify-content:space-between;padding-bottom:10px;
+  position:relative;z-index:200;
+}
+.topbar-logo{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.topbar-right{display:flex;align-items:center;gap:8px}
+.icon-btn{
+  width:38px;height:38px;border-radius:50%;background:var(--bg3);
+  display:flex;align-items:center;justify-content:center;font-size:18px;
+  position:relative;cursor:pointer;min-width:44px;min-height:44px;
+}
+.notif-dot{position:absolute;top:6px;right:6px;width:8px;height:8px;background:var(--red);border-radius:50%;border:2px solid var(--bg);display:none}
+.avatar-btn{
+  width:38px;height:38px;border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),var(--pink));
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;font-weight:800;color:#fff;
+  border:2px solid var(--border);cursor:pointer;overflow:hidden;
+  min-width:44px;min-height:44px;
+}
+.avatar-btn img{width:100%;height:100%;object-fit:cover}
+
+/* ── SCROLL AREA ──────────────────────────────────────────────────── */
+#scroll-area{
+  flex:1;overflow-y:auto;overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior-y:contain;
+  scroll-behavior:smooth;
+}
+
+/* ── PAGES ────────────────────────────────────────────────────────── */
+.page{display:none;flex-direction:column;padding:16px 16px calc(16px);gap:14px;animation:pgIn .25s ease}
+.page.active{display:flex}
+@keyframes pgIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── BOTTOM NAV ───────────────────────────────────────────────────── */
+.bottom-nav{
+  flex-shrink:0;
+  height:var(--nav-h);padding-bottom:var(--safe-bot);
+  background:rgba(10,10,15,.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-around;
+  padding-top:6px;position:relative;z-index:200;
+}
+.ni{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:3px;cursor:pointer;padding:6px 4px;
+  min-height:44px;position:relative;
+}
+.ni-icon{font-size:22px;transition:transform .2s}
+.ni-label{font-size:9px;font-weight:700;font-family:'Syne',sans-serif;color:var(--text3);text-transform:uppercase;letter-spacing:.4px}
+.ni.active .ni-icon{transform:scale(1.15)}
+.ni.active .ni-label{color:var(--accent2)}
+.ni-add{
+  width:54px;height:54px;border-radius:50%;margin-top:-20px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  display:flex;align-items:center;justify-content:center;
+  font-size:26px;color:#fff;
+  box-shadow:0 4px 24px rgba(108,92,231,.5);
+  transition:transform .15s;
+}
+.ni-add:active{transform:scale(.93)}
+
+/* ── CARDS ────────────────────────────────────────────────────────── */
+.card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:18px}
+.card-sm{padding:14px}
+.card-label{font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;font-family:'Syne',sans-serif}
+
+/* ── HOME ─────────────────────────────────────────────────────────── */
+.greeting{font-size:24px;font-weight:800}
+.greeting span{background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.greeting-sub{font-size:13px;color:var(--text2);margin-top:3px}
+
+/* Calorie ring */
+.ring-wrap{display:flex;align-items:center;gap:18px}
+.ring-box{position:relative;width:110px;height:110px;flex-shrink:0}
+.ring-svg{transform:rotate(-90deg);display:block}
+.ring-bg{fill:none;stroke:var(--bg3);stroke-width:9}
+.ring-fg{fill:none;stroke:url(#rg);stroke-width:9;stroke-linecap:round;transition:stroke-dashoffset .9s ease}
+.ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring-num{font-size:19px;font-weight:800;font-family:'Syne',sans-serif;line-height:1}
+.ring-unit{font-size:9px;color:var(--text2);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.ring-details{flex:1;min-width:0}
+.ring-goal-txt{font-size:12px;color:var(--text2);margin-bottom:10px}
+.mac{margin-bottom:7px}
+.mac-row{display:flex;justify-content:space-between;font-size:11px;color:var(--text2);font-weight:600;margin-bottom:3px;text-transform:uppercase}
+.mac-bar{height:4px;background:var(--bg3);border-radius:99px;overflow:hidden}
+.mac-fill{height:100%;border-radius:99px;transition:width .9s ease}
+.mac-p .mac-fill{background:var(--red)}
+.mac-c .mac-fill{background:var(--orange)}
+.mac-f .mac-fill{background:var(--green)}
+
+/* stat pills row */
+.stat-pills{display:flex;gap:8px}
+.stat-pill{flex:1;background:var(--bg3);border-radius:14px;padding:12px 8px;text-align:center}
+.sp-val{font-size:20px;font-weight:800;font-family:'Syne',sans-serif;line-height:1}
+.sp-lbl{font-size:9px;color:var(--text2);font-weight:700;text-transform:uppercase;margin-top:3px;letter-spacing:.4px}
+
+/* quick buttons */
+.quick-row{display:flex;gap:8px;flex-wrap:nowrap;overflow-x:auto;padding-bottom:2px;-webkit-overflow-scrolling:touch}
+.quick-row::-webkit-scrollbar{display:none}
+.qbtn{
+  flex-shrink:0;padding:9px 16px;border-radius:99px;
+  font-size:12px;font-weight:700;font-family:'Syne',sans-serif;
+  background:var(--bg3);border:1.5px solid var(--border);color:var(--text2);
+  white-space:nowrap;min-height:38px;
+}
+.qbtn:active{background:rgba(108,92,231,.15);border-color:var(--accent);color:var(--accent)}
+
+/* section header */
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.sec-title{font-size:16px;font-weight:800}
+.sec-action{font-size:12px;color:var(--accent2);font-weight:700;padding:4px 0;min-height:44px;display:flex;align-items:center}
+
+/* meal item */
+.mi{display:flex;align-items:center;gap:10px;padding:12px;background:var(--bg3);border-radius:14px;margin-bottom:7px}
+.mi-ico{width:40px;height:40px;border-radius:11px;background:var(--card);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.mi-info{flex:1;min-width:0}
+.mi-name{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mi-meta{font-size:11px;color:var(--text2);margin-top:2px}
+.mi-kcal{font-size:13px;font-weight:800;font-family:'Syne',sans-serif;color:var(--accent2);flex-shrink:0}
+.mi-del{width:32px;height:32px;min-width:44px;min-height:44px;border-radius:50%;background:transparent;color:var(--text3);font-size:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.mi-del:active{background:rgba(255,107,107,.15);color:var(--red)}
+
+/* workout item */
+.wi{display:flex;align-items:center;gap:10px;padding:14px;background:var(--bg3);border-radius:14px;margin-bottom:7px}
+.wi-info{flex:1;min-width:0}
+.wi-name{font-size:14px;font-weight:700;margin-bottom:5px}
+.wi-meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.badge{padding:3px 10px;border-radius:99px;font-size:10px;font-weight:800;font-family:'Syne',sans-serif;text-transform:uppercase;white-space:nowrap}
+.b-str{background:rgba(108,92,231,.2);color:var(--accent2)}
+.b-car{background:rgba(255,107,107,.2);color:var(--red)}
+.b-fle{background:rgba(0,206,201,.2);color:var(--green)}
+.b-spo{background:rgba(253,203,110,.2);color:var(--orange)}
+.b-oth{background:rgba(128,128,160,.2);color:var(--text2)}
+.wi-extra{font-size:11px;color:var(--text2)}
+
+/* ── SOCIAL ───────────────────────────────────────────────────────── */
+.feed-tabs{display:flex;gap:4px;background:var(--bg2);border-radius:12px;padding:4px;margin-bottom:12px}
+.ft{flex:1;padding:9px 4px;border-radius:9px;font-size:12px;font-weight:800;font-family:'Syne',sans-serif;background:transparent;color:var(--text2);text-align:center;min-height:40px}
+.ft.active{background:var(--accent);color:#fff}
+
+.post-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:14px;margin-bottom:10px}
+.pc-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.pc-av{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--pink));display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff;flex-shrink:0;overflow:hidden}
+.pc-av img{width:100%;height:100%;object-fit:cover}
+.pc-name{font-size:14px;font-weight:800;font-family:'Syne',sans-serif}
+.pc-time{font-size:11px;color:var(--text3)}
+.pc-body{font-size:14px;line-height:1.6;color:var(--text)}
+.pc-actions{display:flex;gap:4px;margin-top:12px;padding-top:10px;border-top:1px solid var(--border)}
+.pc-act{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--text2);padding:8px 12px;border-radius:10px;background:none;border:none;font-family:inherit;min-height:44px;flex:1;justify-content:center}
+.pc-act:active{background:var(--bg3)}
+.pc-act.liked{color:var(--pink)}
+.comments-drop{display:none;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
+.comments-drop.open{display:block}
+.cmt{display:flex;gap:8px;margin-bottom:10px}
+.cmt-av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--accent));display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0}
+.cmt-bubble{background:var(--bg3);border-radius:12px;padding:8px 12px;flex:1}
+.cmt-user{font-size:11px;font-weight:800;font-family:'Syne',sans-serif}
+.cmt-txt{font-size:13px;color:var(--text2);margin-top:2px;line-height:1.4}
+.cmt-input-row{display:flex;gap:8px;align-items:center;margin-top:8px}
+.cmt-input{flex:1;background:var(--bg3);border:1.5px solid var(--border);border-radius:99px;padding:10px 14px;font-size:13px;color:var(--text);min-height:44px}
+.cmt-input::placeholder{color:var(--text3)}
+.cmt-input:focus{border-color:var(--accent);outline:none}
+.cmt-send{width:44px;height:44px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.cmt-send:active{opacity:.8}
+
+.friend-card{display:flex;align-items:center;gap:12px;padding:12px;background:var(--bg3);border-radius:14px;margin-bottom:8px}
+.fc-av{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--pink));display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;color:#fff;flex-shrink:0}
+.fc-info{flex:1;min-width:0}
+.fc-name{font-size:14px;font-weight:800;font-family:'Syne',sans-serif}
+.fc-meta{font-size:12px;color:var(--text2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fc-actions{display:flex;gap:6px;flex-shrink:0}
+
+/* ── STATS ────────────────────────────────────────────────────────── */
+.stats-3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.scard{background:var(--bg3);border-radius:14px;padding:14px 8px;text-align:center}
+.scard-val{font-size:22px;font-weight:800;font-family:'Syne',sans-serif;line-height:1}
+.scard-lbl{font-size:9px;color:var(--text2);font-weight:700;text-transform:uppercase;margin-top:4px}
+.chart-box{width:100%;height:160px}
+canvas{width:100%!important}
+
+/* achievements */
+.ach-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.ach-card{background:var(--bg3);border-radius:14px;padding:12px 8px;text-align:center;border:1px solid transparent}
+.ach-card.done{border-color:rgba(108,92,231,.3);background:rgba(108,92,231,.07)}
+.ach-card.locked{opacity:.45;filter:grayscale(.8)}
+.ach-ico{font-size:28px;margin-bottom:5px;line-height:1}
+.ach-name{font-size:10px;font-weight:800;font-family:'Syne',sans-serif;line-height:1.3;letter-spacing:.2px}
+.ach-stat{font-size:9px;color:var(--text3);margin-top:3px}
+
+/* ── PROFILE ──────────────────────────────────────────────────────── */
+.prof-hero{
+  background:linear-gradient(135deg,rgba(108,92,231,.2),rgba(0,206,201,.1));
+  border-radius:20px;padding:24px 20px;text-align:center;border:1px solid rgba(108,92,231,.2);
+}
+.prof-avatar{
+  width:80px;height:80px;border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),var(--pink));
+  display:flex;align-items:center;justify-content:center;
+  font-size:30px;font-weight:800;color:#fff;
+  margin:0 auto 12px;overflow:hidden;border:3px solid var(--border);
+}
+.prof-avatar img{width:100%;height:100%;object-fit:cover}
+.prof-name{font-size:22px;font-weight:800}
+.prof-bio{font-size:13px;color:var(--text2);margin-top:5px;line-height:1.5}
+.prof-stats{display:flex;gap:0;margin-top:16px;background:rgba(0,0,0,.25);border-radius:14px;overflow:hidden}
+.ps{flex:1;padding:12px 6px;text-align:center;border-right:1px solid rgba(255,255,255,.06)}
+.ps:last-child{border-right:none}
+.ps-val{font-size:18px;font-weight:800;font-family:'Syne',sans-serif}
+.ps-lbl{font-size:9px;color:var(--text2);text-transform:uppercase;font-weight:700;margin-top:2px}
+
+.settings-list{display:flex;flex-direction:column;gap:2px;background:var(--card);border-radius:18px;overflow:hidden}
+.sitem{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 16px;cursor:pointer;min-height:56px;
+  border-bottom:1px solid var(--border);transition:background .15s;
+}
+.sitem:last-child{border-bottom:none}
+.sitem:active{background:var(--bg3)}
+.sitem-l{display:flex;align-items:center;gap:14px;font-size:15px}
+.sitem-ico{font-size:20px;width:26px;text-align:center}
+.sitem-r{font-size:20px;color:var(--text3)}
+
+.toggle{position:relative;width:48px;height:26px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0;position:absolute}
+.toggle-slider{position:absolute;cursor:pointer;inset:0;background:var(--border);border-radius:99px;transition:.3s}
+.toggle-slider::before{content:'';position:absolute;width:20px;height:20px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.3s;box-shadow:0 1px 4px rgba(0,0,0,.3)}
+input:checked+.toggle-slider{background:var(--accent)}
+input:checked+.toggle-slider::before{transform:translateX(22px)}
+
+/* ── NOTIFICATIONS ────────────────────────────────────────────────── */
+.notif-item{display:flex;gap:12px;padding:14px 16px;background:var(--bg3);border-radius:14px;margin-bottom:8px;border:1px solid transparent}
+.notif-item.unread{border-color:rgba(108,92,231,.25);background:rgba(108,92,231,.06)}
+.notif-ico{width:42px;height:42px;border-radius:50%;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.notif-body{flex:1;min-width:0}
+.notif-txt{font-size:13px;line-height:1.5}
+.notif-time{font-size:11px;color:var(--text3);margin-top:3px}
+.notif-unread-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:4px}
+
+/* ── AI CHAT ──────────────────────────────────────────────────────── */
+.chat-msgs{
+  display:flex;flex-direction:column;gap:10px;
+  padding:16px;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  min-height:260px;max-height:48dvh;overscroll-behavior:contain;
+}
+.cmsg{max-width:82%;display:flex;gap:7px;align-items:flex-end}
+.cmsg.user{align-self:flex-end;flex-direction:row-reverse}
+.cbubble{padding:10px 14px;border-radius:18px;font-size:14px;line-height:1.5}
+.cmsg.ai .cbubble{background:var(--bg3);border-radius:18px 18px 18px 4px}
+.cmsg.user .cbubble{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border-radius:18px 18px 4px 18px}
+.cav{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--green));display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.chat-foot{padding:10px 16px 16px;border-top:1px solid var(--border)}
+.chat-quick-row{display:flex;gap:6px;flex-wrap:nowrap;overflow-x:auto;padding-bottom:10px;-webkit-overflow-scrolling:touch}
+.chat-quick-row::-webkit-scrollbar{display:none}
+.cq{flex-shrink:0;padding:7px 14px;border-radius:99px;font-size:12px;font-weight:700;background:var(--bg3);border:1px solid var(--border);color:var(--text2);min-height:36px;font-family:'Syne',sans-serif}
+.cq:active{border-color:var(--accent);color:var(--accent)}
+.chat-input-row{display:flex;gap:8px;align-items:center}
+.chat-input{
+  flex:1;background:var(--bg3);border:1.5px solid var(--border);
+  border-radius:99px;padding:12px 16px;color:var(--text);font-size:14px;
+  min-height:48px;
+}
+.chat-input:focus{border-color:var(--accent);outline:none}
+.chat-input::placeholder{color:var(--text3)}
+.chat-send{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.chat-send:active{opacity:.8}
+.typing{display:flex;gap:4px;align-items:center;padding:8px 12px}
+.td{width:7px;height:7px;border-radius:50%;background:var(--text3);animation:tb .8s infinite}
+.td:nth-child(2){animation-delay:.15s}
+.td:nth-child(3){animation-delay:.3s}
+@keyframes tb{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
+
+/* ── ADD TYPE PICKER ──────────────────────────────────────────────── */
+.add-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.add-card{background:var(--bg3);border:1.5px solid var(--border);border-radius:18px;padding:20px 14px;text-align:center;cursor:pointer;min-height:110px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;transition:all .15s}
+.add-card:active{border-color:var(--accent);background:rgba(108,92,231,.1)}
+.add-card-ico{font-size:32px;line-height:1}
+.add-card-name{font-size:14px;font-weight:800;font-family:'Syne',sans-serif}
+.add-card-desc{font-size:11px;color:var(--text2)}
+
+/* ── SEARCH ───────────────────────────────────────────────────────── */
+.search-wrap{position:relative}
+.search-ico{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:17px;color:var(--text3);pointer-events:none}
+.search-input{
+  width:100%;background:var(--bg3);border:1.5px solid var(--border);
+  border-radius:14px;padding:13px 16px 13px 42px;
+  color:var(--text);font-size:15px;min-height:48px;
+}
+.search-input:focus{border-color:var(--accent);outline:none}
+.search-input::placeholder{color:var(--text3)}
+
+/* ── EXERCISE ENTRY ───────────────────────────────────────────────── */
+.ex-entry{background:var(--bg3);border-radius:14px;padding:12px 14px;border:1.5px solid var(--border);margin-bottom:8px;position:relative}
+.ex-remove{position:absolute;top:10px;right:10px;width:28px;height:28px;min-width:44px;min-height:44px;border-radius:50%;background:rgba(255,107,107,.15);color:var(--red);font-size:16px;display:flex;align-items:center;justify-content:center}
+.form-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.form-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+
+/* intensity */
+.int-row{display:flex;gap:6px}
+.int-opt{flex:1;padding:10px 4px;border-radius:12px;border:1.5px solid var(--border);text-align:center;font-size:12px;font-weight:800;font-family:'Syne',sans-serif;color:var(--text2);min-height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.int-low.sel{border-color:var(--green);color:var(--green);background:rgba(0,206,201,.1)}
+.int-med.sel{border-color:var(--orange);color:var(--orange);background:rgba(253,203,110,.1)}
+.int-hig.sel{border-color:var(--red);color:var(--red);background:rgba(255,107,107,.1)}
+
+/* ── CONFIRM MODAL ────────────────────────────────────────────────── */
+.confirm-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+
+/* ── EMPTY STATE ──────────────────────────────────────────────────── */
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:36px 16px;text-align:center;color:var(--text2)}
+.empty-ico{font-size:44px;margin-bottom:12px;opacity:.5}
+.empty-ttl{font-size:16px;font-weight:800;font-family:'Syne',sans-serif;margin-bottom:6px;color:var(--text)}
+.empty-sub{font-size:13px}
+
+/* ── SEPARATOR ────────────────────────────────────────────────────── */
+.sep{height:1px;background:var(--border);margin:6px 0}
+.gap-section{height:6px}
+
+/* ── MEAL DATE HEADER ─────────────────────────────────────────────── */
+.date-hdr{font-size:12px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.8px;font-family:'Syne',sans-serif;padding:4px 0 8px;display:flex;align-items:center;gap:8px}
+.date-hdr::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* filter pills */
+.filter-row{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch}
+.filter-row::-webkit-scrollbar{display:none}
+.fpill{flex-shrink:0;padding:8px 14px;border-radius:99px;font-size:12px;font-weight:700;font-family:'Syne',sans-serif;background:var(--bg3);border:1.5px solid var(--border);color:var(--text2);min-height:38px}
+.fpill.sel{border-color:var(--accent);color:var(--accent);background:rgba(108,92,231,.1)}
+.fpill:active{opacity:.8}
+
+/* ── UTILS ────────────────────────────────────────────────────────── */
+.fw800{font-weight:800;font-family:'Syne',sans-serif}
+.tc-accent{color:var(--accent2)}
+.tc-green{color:var(--green)}
+.tc-red{color:var(--red)}
+.tc-muted{color:var(--text2)}
+.fs12{font-size:12px}
+.fs13{font-size:13px}
+.flex-row{display:flex;align-items:center}
+.flex-1{flex:1}
+.gap6{gap:6px}
+.mt8{margin-top:8px}
+.mt12{margin-top:12px}
+.mt16{margin-top:16px}
+.mb8{margin-bottom:8px}
+.mb12{margin-bottom:12px}
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="app-loader">
+  <div class="loader-logo">FormLog</div>
+  <div class="loader-sub">Hazırlanıyor...</div>
+  <div class="loader-bar"><div class="loader-fill"></div></div>
+</div>
+
+<!-- TOAST -->
+<div id="toast-wrap"></div>
+
+<!-- ─── AUTH SCREEN ─────────────────────────────────────────────────── -->
+<div id="auth-screen" style="display:none">
+  <div class="auth-glow"></div>
+  <div class="auth-card">
+    <div class="auth-logo">FormLog</div>
+    <div class="auth-tagline">Fitness sosyal ağın 💪</div>
+    <div class="tab-row">
+      <button class="tab-btn active" onclick="switchTab('login')">Giriş Yap</button>
+      <button class="tab-btn" onclick="switchTab('register')">Kayıt Ol</button>
+    </div>
+
+    <!-- LOGIN -->
+    <div id="form-login">
+      <div class="fg"><label class="fl">Email</label>
+        <input type="email" id="l-email" class="fi" placeholder="email@example.com" autocomplete="email" inputmode="email">
+      </div>
+      <div class="fg"><label class="fl">Şifre</label>
+        <input type="password" id="l-pass" class="fi" placeholder="••••••" autocomplete="current-password">
+      </div>
+      <div id="l-err" class="ferr" style="display:none;margin-bottom:10px"></div>
+      <button class="btn btn-primary btn-block" id="login-btn" onclick="doLogin()">Giriş Yap</button>
+      <div class="auth-link mt12"><span onclick="showForgot()">Şifremi unuttum</span></div>
+    </div>
+
+    <!-- REGISTER -->
+    <div id="form-register" style="display:none">
+      <div class="fg"><label class="fl">Kullanıcı Adı</label>
+        <input type="text" id="r-user" class="fi" placeholder="kullanici_adi" autocomplete="username" oninput="chkUser(this.value)">
+        <div id="r-user-status" class="fhint"></div>
+      </div>
+      <div class="fg"><label class="fl">Email</label>
+        <input type="email" id="r-email" class="fi" placeholder="email@example.com" autocomplete="email" inputmode="email">
+      </div>
+      <div class="fg"><label class="fl">Şifre</label>
+        <input type="password" id="r-pass" class="fi" placeholder="Min 6 karakter" autocomplete="new-password" oninput="pwStrength(this.value)">
+        <div id="pw-bar" class="pw-bar"></div>
+        <div id="pw-txt" class="fhint"></div>
+      </div>
+      <div class="fg"><label class="fl">Şifre Tekrar</label>
+        <input type="password" id="r-pass2" class="fi" placeholder="Şifreyi tekrarla" autocomplete="new-password">
+      </div>
+      <div class="fg"><label class="fl">Günlük Kalori Hedefi: <span id="goal-disp">2000</span> kcal</label>
+        <input type="range" class="range-input" min="1200" max="4000" step="50" value="2000" oninput="document.getElementById('goal-disp').textContent=this.value">
+      </div>
+      <div id="r-err" class="ferr" style="display:none;margin-bottom:10px"></div>
+      <button class="btn btn-primary btn-block" onclick="doRegister()">Kayıt Ol</button>
+    </div>
+
+    <!-- FORGOT -->
+    <div id="form-forgot" style="display:none">
+      <div style="font-size:14px;color:var(--text2);margin-bottom:16px">Email adresini gir, sıfırlama linki gönderelim.</div>
+      <div class="fg"><label class="fl">Email</label>
+        <input type="email" id="f-email" class="fi" placeholder="email@example.com" inputmode="email">
+      </div>
+      <div id="f-msg" class="fhint" style="display:none;margin-bottom:10px"></div>
+      <button class="btn btn-primary btn-block" onclick="doForgot()">Sıfırlama Linki Gönder</button>
+      <div class="auth-link mt12"><span onclick="switchTab('login')">← Geri dön</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── MAIN APP ────────────────────────────────────────────────────── -->
+<div id="main-app">
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-logo">FormLog</div>
+    <div class="topbar-right">
+      <div class="icon-btn" onclick="showPage('notifs')">
+        🔔<div class="notif-dot" id="n-badge"></div>
+      </div>
+      <div class="avatar-btn" id="top-av" onclick="showPage('profile')">
+        <span id="top-av-txt">?</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCROLL AREA -->
+  <div id="scroll-area">
+
+    <!-- HOME -->
+    <div class="page active" id="page-home">
+      <div>
+        <div class="greeting">Merhaba, <span id="h-name">Abi</span>! 👋</div>
+        <div class="greeting-sub" id="h-date"></div>
+      </div>
+
+      <!-- Calorie Ring -->
+      <div class="card">
+        <div class="card-label">Bugünkü Kalori</div>
+        <div class="ring-wrap">
+          <div class="ring-box">
+            <svg class="ring-svg" viewBox="0 0 110 110" width="110" height="110">
+              <defs>
+                <linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#6c5ce7"/>
+                  <stop offset="100%" stop-color="#a29bfe"/>
+                </linearGradient>
+              </defs>
+              <circle class="ring-bg" cx="55" cy="55" r="46"/>
+              <circle class="ring-fg" id="cal-ring" cx="55" cy="55" r="46" stroke-dasharray="289" stroke-dashoffset="289"/>
+            </svg>
+            <div class="ring-center">
+              <div class="ring-num" id="r-eaten">0</div>
+              <div class="ring-unit">kcal</div>
+            </div>
+          </div>
+          <div class="ring-details">
+            <div class="ring-goal-txt">Hedef: <b id="r-goal">2000</b> · Kalan: <b class="tc-accent" id="r-left">2000</b></div>
+            <div class="mac mac-p">
+              <div class="mac-row"><span>Protein</span><span id="m-p">0g</span></div>
+              <div class="mac-bar"><div class="mac-fill" id="mb-p" style="width:0%"></div></div>
+            </div>
+            <div class="mac mac-c">
+              <div class="mac-row"><span>Karb</span><span id="m-c">0g</span></div>
+              <div class="mac-bar"><div class="mac-fill" id="mb-c" style="width:0%"></div></div>
+            </div>
+            <div class="mac mac-f">
+              <div class="mac-row"><span>Yağ</span><span id="m-f">0g</span></div>
+              <div class="mac-bar"><div class="mac-fill" id="mb-f" style="width:0%"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats Row -->
+      <div class="stat-pills">
+        <div class="stat-pill"><div class="sp-val">🔥<span id="h-streak">0</span></div><div class="sp-lbl">Streak</div></div>
+        <div class="stat-pill"><div class="sp-val" id="h-meals">0</div><div class="sp-lbl">Öğün</div></div>
+        <div class="stat-pill"><div class="sp-val" id="h-wkts">0</div><div class="sp-lbl">Antrenman</div></div>
+      </div>
+
+      <!-- Quick -->
+      <div class="card card-sm">
+        <div class="card-label" style="margin-bottom:10px">Hızlı Ekle</div>
+        <div class="quick-row">
+          <button class="qbtn" onclick="openMealSheet()">🍽️ Öğün</button>
+          <button class="qbtn" onclick="openWorkoutSheet()">💪 Antrenman</button>
+          <button class="qbtn" onclick="openAISheet()">🤖 AI Koç</button>
+          <button class="qbtn" onclick="openPostSheet()">📝 Gönderi</button>
+        </div>
+      </div>
+
+      <!-- Today Meals -->
+      <div>
+        <div class="sec-hdr">
+          <div class="sec-title">Bugünkü Öğünler</div>
+          <div class="sec-action" onclick="showPage('meals')">Tümü →</div>
+        </div>
+        <div id="h-meals-list"></div>
+      </div>
+
+      <!-- Today Workouts -->
+      <div>
+        <div class="sec-hdr">
+          <div class="sec-title">Bugünkü Antrenmanlar</div>
+          <div class="sec-action" onclick="showPage('workouts')">Tümü →</div>
+        </div>
+        <div id="h-wkts-list"></div>
+      </div>
+    </div>
+
+    <!-- MEALS -->
+    <div class="page" id="page-meals">
+      <div class="sec-hdr">
+        <div class="sec-title">Öğünlerim</div>
+        <button class="btn btn-primary btn-sm" onclick="openMealSheet()">+ Ekle</button>
+      </div>
+      <div class="search-wrap">
+        <span class="search-ico">🔍</span>
+        <input class="search-input" type="search" placeholder="Öğün ara..." id="meal-q" oninput="renderMealsPage()">
+      </div>
+      <div class="filter-row" id="meal-filters">
+        <button class="fpill sel" data-cat="" onclick="setMealCat(this,'')">Tümü</button>
+        <button class="fpill" data-cat="kahvaltı" onclick="setMealCat(this,'kahvaltı')">🌅 Kahvaltı</button>
+        <button class="fpill" data-cat="öğle" onclick="setMealCat(this,'öğle')">🍽️ Öğle</button>
+        <button class="fpill" data-cat="akşam" onclick="setMealCat(this,'akşam')">🌙 Akşam</button>
+        <button class="fpill" data-cat="atıştırmalık" onclick="setMealCat(this,'atıştırmalık')">🍿 Atıştırmalık</button>
+      </div>
+      <div id="meals-list"></div>
+    </div>
+
+    <!-- WORKOUTS -->
+    <div class="page" id="page-workouts">
+      <div class="sec-hdr">
+        <div class="sec-title">Antrenmanlarım</div>
+        <button class="btn btn-primary btn-sm" onclick="openWorkoutSheet()">+ Ekle</button>
+      </div>
+      <div id="wkts-list"></div>
+    </div>
+
+    <!-- SOCIAL -->
+    <div class="page" id="page-social">
+      <div class="feed-tabs">
+        <button class="ft active" id="ft-home" onclick="switchFeed('home')">🏠 Akış</button>
+        <button class="ft" id="ft-discover" onclick="switchFeed('discover')">🔍 Keşfet</button>
+        <button class="ft" id="ft-friends" onclick="switchFeed('friends')">👥 Arkadaşlar</button>
+      </div>
+
+      <!-- Feed -->
+      <div id="feed-home-wrap">
+        <button class="btn btn-ghost btn-block mb12" onclick="openPostSheet()" style="border-style:dashed;color:var(--text2)">✍️ Paylaş...</button>
+        <div id="feed-posts"></div>
+      </div>
+
+      <!-- Discover -->
+      <div id="feed-discover-wrap" style="display:none">
+        <div class="search-wrap mb12">
+          <span class="search-ico">🔍</span>
+          <input class="search-input" type="search" placeholder="Kullanıcı ara..." id="user-q" oninput="searchUsers()">
+        </div>
+        <div id="discover-list"></div>
+      </div>
+
+      <!-- Friends -->
+      <div id="feed-friends-wrap" style="display:none">
+        <div class="sec-hdr mt8"><div class="sec-title">Arkadaşlarım</div></div>
+        <div id="friends-list"></div>
+        <div class="sec-hdr mt16"><div class="sec-title">Gelen İstekler</div></div>
+        <div id="req-list"></div>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="page" id="page-stats">
+      <div class="sec-title mb12">İstatistikler</div>
+      <div class="stats-3">
+        <div class="scard"><div class="scard-val" id="s-meals">0</div><div class="scard-lbl">Öğün</div></div>
+        <div class="scard"><div class="scard-val" id="s-wkts">0</div><div class="scard-lbl">Antrenman</div></div>
+        <div class="scard"><div class="scard-val">🔥<span id="s-str">0</span></div><div class="scard-lbl">Streak</div></div>
+      </div>
+      <div class="card">
+        <div class="card-label">7 Günlük Kalori</div>
+        <div class="chart-box"><canvas id="ch-cal"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-label">Makro Dağılımı</div>
+        <div class="chart-box" style="height:145px"><canvas id="ch-mac" style="height:145px!important"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-label">Antrenman Türleri</div>
+        <div class="chart-box" style="height:145px"><canvas id="ch-wkt" style="height:145px!important"></canvas></div>
+      </div>
+      <div>
+        <div class="sec-hdr"><div class="sec-title">🏆 Başarılar</div><div class="sec-action" id="ach-ctr"></div></div>
+        <div class="ach-grid" id="ach-grid"></div>
+      </div>
+    </div>
+
+    <!-- PROFILE -->
+    <div class="page" id="page-profile">
+      <div class="prof-hero">
+        <div class="prof-avatar" id="p-av"><span id="p-av-txt">?</span></div>
+        <div class="prof-name" id="p-name">Kullanıcı</div>
+        <div class="prof-bio" id="p-bio">Fitness yolculuğum</div>
+        <div class="prof-stats">
+          <div class="ps"><div class="ps-val" id="p-meals">0</div><div class="ps-lbl">Öğün</div></div>
+          <div class="ps"><div class="ps-val" id="p-wkts">0</div><div class="ps-lbl">Antrenman</div></div>
+          <div class="ps"><div class="ps-val" id="p-str">0</div><div class="ps-lbl">Streak</div></div>
+          <div class="ps"><div class="ps-val" id="p-frds">0</div><div class="ps-lbl">Arkadaş</div></div>
+        </div>
+      </div>
+
+      <div class="settings-list mt8">
+        <div class="sitem" onclick="openEditSheet()"><div class="sitem-l"><span class="sitem-ico">✏️</span>Profili Düzenle</div><div class="sitem-r">›</div></div>
+        <div class="sitem" onclick="openAISheet()"><div class="sitem-l"><span class="sitem-ico">🤖</span>AI Fitness Koç</div><div class="sitem-r">›</div></div>
+      </div>
+
+      <div class="settings-list mt8">
+        <div class="sitem"><div class="sitem-l"><span class="sitem-ico">🔔</span>Bildirimler</div><label class="toggle"><input type="checkbox" id="notif-tog" checked onchange="saveSettings()"><span class="toggle-slider"></span></label></div>
+        <div class="sitem" onclick="openEditSheet()"><div class="sitem-l"><span class="sitem-ico">🎯</span>Kalori Hedefi</div><div class="sitem-r" id="goal-disp2" style="font-size:14px;color:var(--accent2)">2000 kcal</div></div>
+      </div>
+
+      <div class="settings-list mt8">
+        <div class="sitem" onclick="doLogout()" style="color:var(--red)"><div class="sitem-l" style="color:var(--red)"><span class="sitem-ico">🚪</span>Çıkış Yap</div><div class="sitem-r">›</div></div>
+      </div>
+    </div>
+
+    <!-- NOTIFICATIONS -->
+    <div class="page" id="page-notifs">
+      <div class="sec-hdr">
+        <div class="sec-title">Bildirimler</div>
+        <div class="sec-action" onclick="markAllRead()">Tümünü oku</div>
+      </div>
+      <div id="notifs-list"></div>
+    </div>
+
+  </div><!-- end scroll-area -->
+
+  <!-- BOTTOM NAV -->
+  <div class="bottom-nav">
+    <div class="ni active" id="ni-home" onclick="showPage('home')">
+      <div class="ni-icon">🏠</div><div class="ni-label">Ana Sayfa</div>
+    </div>
+    <div class="ni" id="ni-meals" onclick="showPage('meals')">
+      <div class="ni-icon">🍽️</div><div class="ni-label">Öğünler</div>
+    </div>
+    <div class="ni" id="ni-add" onclick="openAddSheet()">
+      <div class="ni-add">+</div>
+    </div>
+    <div class="ni" id="ni-social" onclick="showPage('social')">
+      <div class="ni-icon">👥</div><div class="ni-label">Sosyal</div>
+    </div>
+    <div class="ni" id="ni-stats" onclick="showPage('stats')">
+      <div class="ni-icon">📊</div><div class="ni-label">İstatistik</div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── BOTTOM SHEETS ────────────────────────────────────────────────── -->
+
+<!-- ADD PICKER -->
+<div class="sheet-overlay" id="sh-add">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-header"><div class="sheet-title">Ne Ekleyelim?</div><button class="sheet-close" onclick="closeSheet('sh-add')">✕</button></div>
+    <div class="sheet-body">
+      <div class="add-grid">
+        <div class="add-card" onclick="closeSheet('sh-add');openMealSheet()"><div class="add-card-ico">🍽️</div><div class="add-card-name">Öğün</div><div class="add-card-desc">Yemek & kalori</div></div>
+        <div class="add-card" onclick="closeSheet('sh-add');openWorkoutSheet()"><div class="add-card-ico">💪</div><div class="add-card-name">Antrenman</div><div class="add-card-desc">Egzersiz kaydı</div></div>
+        <div class="add-card" onclick="closeSheet('sh-add');openPostSheet()"><div class="add-card-ico">📝</div><div class="add-card-name">Gönderi</div><div class="add-card-desc">Paylaşım yap</div></div>
+        <div class="add-card" onclick="closeSheet('sh-add');openAISheet()"><div class="add-card-ico">🤖</div><div class="add-card-name">AI Koç</div><div class="add-card-desc">Fitness tavsiyeleri</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MEAL SHEET -->
+<div class="sheet-overlay" id="sh-meal">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-header"><div class="sheet-title">Öğün Ekle</div><button class="sheet-close" onclick="closeSheet('sh-meal')">✕</button></div>
+    <div class="sheet-body">
+      <div class="fg"><label class="fl">Öğün Adı</label>
+        <input type="text" id="mn" class="fi" placeholder="örn: Tavuk Göğsü" list="meal-dl" autocomplete="off">
+        <datalist id="meal-dl"></datalist>
+      </div>
+      <div class="fg"><label class="fl">Kategori</label>
+        <select id="mcat" class="fi">
+          <option value="kahvaltı">🌅 Kahvaltı</option>
+          <option value="öğle">🍽️ Öğle</option>
+          <option value="akşam">🌙 Akşam</option>
+          <option value="atıştırmalık">🍿 Atıştırmalık</option>
+        </select>
+      </div>
+      <div class="form-grid-2">
+        <div class="fg"><label class="fl">Kalori (kcal)</label><input type="number" id="mkcal" class="fi" placeholder="0" min="0" inputmode="numeric"></div>
+        <div class="fg"><label class="fl">Porsiyon (g)</label><input type="number" id="mpor" class="fi" placeholder="100" min="0" inputmode="numeric"></div>
+      </div>
+      <div class="form-grid-3">
+        <div class="fg"><label class="fl">Protein</label><input type="number" id="mpro" class="fi" placeholder="0" min="0" step="0.1" inputmode="decimal"></div>
+        <div class="fg"><label class="fl">Karb</label><input type="number" id="mcar" class="fi" placeholder="0" min="0" step="0.1" inputmode="decimal"></div>
+        <div class="fg"><label class="fl">Yağ</label><input type="number" id="mfat" class="fi" placeholder="0" min="0" step="0.1" inputmode="decimal"></div>
+      </div>
+      <div class="fg"><label class="fl">Not</label><textarea id="mnot" class="fi" placeholder="Ekstra not..."></textarea></div>
+      <button class="btn btn-primary btn-block" onclick="saveMeal()">💾 Kaydet</button>
+    </div>
+  </div>
+</div>
+
+<!-- WORKOUT SHEET -->
+<div class="sheet-overlay" id="sh-workout">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-header"><div class="sheet-title">Antrenman Ekle</div><button class="sheet-close" onclick="closeSheet('sh-workout')">✕</button></div>
+    <div class="sheet-body">
+      <div class="fg"><label class="fl">Antrenman Adı</label><input type="text" id="wn" class="fi" placeholder="örn: Sabah Koşusu"></div>
+      <div class="form-grid-2">
+        <div class="fg"><label class="fl">Tür</label>
+          <select id="wtype" class="fi">
+            <option value="strength">💪 Güç</option>
+            <option value="cardio">🏃 Kardio</option>
+            <option value="flexibility">🧘 Esneklik</option>
+            <option value="sports">⚽ Spor</option>
+            <option value="other">⚡ Diğer</option>
+          </select>
+        </div>
+        <div class="fg"><label class="fl">Süre (dk)</label><input type="number" id="wdur" class="fi" placeholder="30" min="1" inputmode="numeric"></div>
+      </div>
+      <div class="fg"><label class="fl">Yoğunluk</label>
+        <div class="int-row">
+          <div class="int-opt int-low" id="int-low" onclick="setInt('low')">🟢 Düşük</div>
+          <div class="int-opt int-med sel" id="int-med" onclick="setInt('med')">🟡 Orta</div>
+          <div class="int-opt int-hig" id="int-hig" onclick="setInt('hig')">🔴 Yüksek</div>
+        </div>
+      </div>
+      <div class="fg"><label class="fl">Yakılan Kalori (opsiyonel)</label><input type="number" id="wkcal" class="fi" placeholder="Boş bırak = otomatik" min="0" inputmode="numeric"></div>
+      <div class="fg"><label class="fl">Egzersizler</label>
+        <div id="ex-list"></div>
+        <button class="btn btn-ghost btn-sm btn-block mt8" onclick="addEx()">+ Egzersiz Ekle</button>
+      </div>
+      <div class="fg"><label class="fl">Not</label><textarea id="wnot" class="fi" placeholder="Antrenman notları..."></textarea></div>
+      <button class="btn btn-primary btn-block" onclick="saveWorkout()">💾 Kaydet</button>
+    </div>
+  </div>
+</div>
+
+<!-- POST SHEET -->
+<div class="sheet-overlay" id="sh-post">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-header"><div class="sheet-title">Gönderi Paylaş</div><button class="sheet-close" onclick="closeSheet('sh-post')">✕</button></div>
+    <div class="sheet-body">
+      <div class="fg"><label class="fl">Ne düşünüyorsun?</label>
+        <textarea id="pcont" class="fi" placeholder="Bugünkü antrenmanını paylaş..." style="min-height:120px" oninput="updPChr(this)"></textarea>
+        <div style="text-align:right" class="fhint" id="p-chr">0 / 500</div>
+      </div>
+      <div class="quick-row mb12">
+        <button class="qbtn" onclick="addToPost('💪 Harika antrenman!')">💪 Antrenman</button>
+        <button class="qbtn" onclick="addToPost('🥗 Sağlıklı besleniyorum!')">🥗 Beslenme</button>
+        <button class="qbtn" onclick="addToPost('🔥 Streak devam ediyor!')">🔥 Streak</button>
+      </div>
+      <div class="fg"><label class="fl">Gizlilik</label>
+        <select id="ppriv" class="fi">
+          <option value="public">🌍 Herkese Açık</option>
+          <option value="friends">👥 Sadece Arkadaşlar</option>
+          <option value="private">🔒 Sadece Ben</option>
+        </select>
+      </div>
+      <button class="btn btn-primary btn-block" onclick="savePost()">📤 Paylaş</button>
+    </div>
+  </div>
+</div>
+
+<!-- AI CHAT SHEET -->
+<div class="sheet-overlay" id="sh-ai">
+  <div class="sheet" style="max-height:95dvh">
+    <div class="sheet-handle"></div>
+    <div class="sheet-header"><div class="sheet-title">🤖 AI Fitness Koç</div><button class="sheet-close" onclick="closeSheet('sh-ai')">✕</button></div>
+    <div class="chat-msgs" id="chat-msgs">
+      <div class="cmsg ai">
+        <div class="cav">🤖</div>
+        <div class="cbubble">Merhaba! Beslenme, antrenman veya motivasyon hakkında soru sorabilirsin 💪</div>
+      </div>
+    </div>
+    <div class="chat-foot">
+      <div class="chat-quick-row mb12">
+        <button class="cq" onclick="qChat('Bugünkü beslenme tavsiyesi ver')">🥗 Beslenme tavsiyen</button>
+        <button class="cq" onclick="qChat('Antrenman öner')">💪 Antrenman öner</button>
+        <button class="cq" onclick="qChat('Beni motive et')">🔥 Motivasyon</button>
+        <button class="cq" onclick="qChat('Kalori hesapla')">🔢 Kalori hesapla</button>
+      </div>
+      <div class="chat-input-row">
+        <input type="text" class="chat-input" id="chat-inp" placeholder="Soru sor..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}">
+        <button class="chat-send" onclick="sendChat()">➤</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT PROFILE SHEET -->
+<div class="sheet-overlay" id="sh-edit">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-header"><div class="sheet-title">Profili Düzenle</div><button class="sheet-close" onclick="closeSheet('sh-edit')">✕</button></div>
+    <div class="sheet-body">
+      <div class="fg"><label class="fl">Kullanıcı Adı</label><input type="text" id="e-user" class="fi" placeholder="kullanici_adi"></div>
+      <div class="fg"><label class="fl">Bio</label><textarea id="e-bio" class="fi" placeholder="Hakkında..."></textarea></div>
+      <div class="fg"><label class="fl">Kalori Hedefi: <span id="e-goal-txt">2000</span> kcal</label>
+        <input type="range" class="range-input" id="e-goal-sl" min="1200" max="4000" step="50" oninput="document.getElementById('e-goal-txt').textContent=this.value">
+      </div>
+      <button class="btn btn-primary btn-block" onclick="saveProfile()">💾 Kaydet</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM SHEET -->
+<div class="sheet-overlay" id="sh-confirm">
+  <div class="sheet" style="max-height:60dvh">
+    <div class="sheet-handle"></div>
+    <div class="sheet-header"><div class="sheet-title" id="cf-title">Emin misin?</div><button class="sheet-close" onclick="closeSheet('sh-confirm')">✕</button></div>
+    <div class="sheet-body">
+      <div id="cf-text" style="font-size:15px;color:var(--text2);margin-bottom:4px"></div>
+      <div class="confirm-btns">
+        <button class="btn btn-ghost" onclick="closeSheet('sh-confirm')">İptal</button>
+        <button class="btn btn-danger" id="cf-ok">Evet, Sil</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<script>
+// ─── CONFIG ───────────────────────────────────────────────────────────────
+const FB = firebase.initializeApp({
+  apiKey:"AIzaSyChffP4EQPy4cgZAcBqjs_OwMGf0mc33qc",
+  authDomain:"formlog-v1.firebaseapp.com",
+  databaseURL:"https://formlog-v1-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId:"formlog-v1",
+  storageBucket:"formlog-v1.firebasestorage.app",
+  messagingSenderId:"24365214740",
+  appId:"1:24365214740:web:51d5205d8ff8fe13a38b01"
+});
+const auth = FB.auth();
+const db   = FB.firestore();
+
+// ─── STATE ────────────────────────────────────────────────────────────────
+let CU = null, UP = null;
+let MEALS=[], WKTS=[], POSTS=[], NOTIFS=[], FRIENDS=[], FREQ=[];
+let selInt='med', mealCatFilter='', feedTab='home';
+let c1=null,c2=null,c3=null, exCnt=0;
+
+const MEAL_DB=[
+  {name:'Tavuk Göğsü',cal:165,p:31,c:0,f:3.6},
+  {name:'Pirinç Pilavı',cal:130,p:2.7,c:28,f:0.3},
+  {name:'Yumurta (1 adet)',cal:78,p:6.3,c:0.6,f:5.3},
+  {name:'Beyaz Ekmek (1 dilim)',cal:79,p:2.7,c:14.4,f:1},
+  {name:'Mercimek Çorbası',cal:116,p:7,c:20,f:1},
+  {name:'Köfte (100g)',cal:230,p:18,c:8,f:15},
+  {name:'Yoğurt (100g)',cal:61,p:3.5,c:4.7,f:3.3},
+  {name:'Muz (1 adet)',cal:89,p:1.1,c:23,f:0.3},
+  {name:'Elma (1 adet)',cal:52,p:0.3,c:14,f:0.2},
+  {name:'Somon (100g)',cal:208,p:20,c:0,f:13},
+  {name:'Salata (100g)',cal:20,p:1,c:4,f:0.2},
+  {name:'Makarna (100g kuru)',cal:371,p:13,c:74,f:1.5},
+  {name:'Peynir (30g)',cal:106,p:6.5,c:0.4,f:9},
+  {name:'Süt (1 bardak)',cal:60,p:3.2,c:4.8,f:3.2},
+  {name:'Zeytinyağı (1 çorba k.)',cal:120,p:0,c:0,f:14},
+];
+
+const ACHS=[
+  {id:'first_meal',ico:'🎯',name:'İlk Adım',desc:'İlk öğün',chk:s=>s.meals>=1},
+  {id:'str7',ico:'🔥',name:'7 Gün Şampiyonu',desc:'7 gün streak',chk:s=>s.streak>=7},
+  {id:'str30',ico:'⚔️',name:'30 Gün Savaşçısı',desc:'30 gün streak',chk:s=>s.streak>=30},
+  {id:'wkt10',ico:'💪',name:'Antrenman Ustası',desc:'10 antrenman',chk:s=>s.wkts>=10},
+  {id:'wkt50',ico:'🏋️',name:'Demir İnsan',desc:'50 antrenman',chk:s=>s.wkts>=50},
+  {id:'meals50',ico:'📊',name:'Kalori Ustası',desc:'50 öğün',chk:s=>s.meals>=50},
+  {id:'cardio5h',ico:'🏃',name:'Kardio Efsanesi',desc:'5 saat kardio',chk:s=>s.cardioMin>=300},
+  {id:'str5h',ico:'🏋️',name:'Güç Efsanesi',desc:'5 saat güç',chk:s=>s.strMin>=300},
+  {id:'post1',ico:'📝',name:'Postcu',desc:'İlk gönderi',chk:s=>s.posts>=1},
+  {id:'post10',ico:'✍️',name:'Yazarım Vardır',desc:'10 gönderi',chk:s=>s.posts>=10},
+  {id:'variety5',ico:'🎪',name:'Şiringe',desc:'5 farklı antrenman',chk:s=>s.variety>=5},
+  {id:'frd10',ico:'🦋',name:'Sosyal Kelebek',desc:'10 arkadaş',chk:s=>s.frds>=10},
+  {id:'meals100',ico:'🍽️',name:'Beslenme Gurusu',desc:'100 öğün',chk:s=>s.meals>=100},
+  {id:'str90',ico:'⭐',name:'Efsane',desc:'90 gün streak',chk:s=>s.streak>=90},
+  {id:'wkt100',ico:'🦾',name:'Makine',desc:'100 antrenman',chk:s=>s.wkts>=100},
+];
+
+// ─── LOADER ───────────────────────────────────────────────────────────────
+window.addEventListener('load',()=>{
+  setTimeout(()=>{
+    document.getElementById('app-loader').style.display='none';
+    auth.onAuthStateChanged(u=>{
+      if(u){CU=u;initApp();}
+      else showAuth();
+    });
+  },1700);
+});
+
+// ─── AUTH ─────────────────────────────────────────────────────────────────
+function showAuth(){document.getElementById('auth-screen').style.display='flex'}
+function switchTab(t){
+  const tabs={login:'form-login',register:'form-register',forgot:'form-forgot'};
+  Object.values(tabs).forEach(id=>document.getElementById(id).style.display='none');
+  document.getElementById(tabs[t]).style.display='block';
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',(t==='login'&&i===0)||(t==='register'&&i===1)));
+}
+function showForgot(){switchTab('forgot')}
+
+async function doLogin(){
+  const btn=document.getElementById('login-btn');
+  const e=v('l-email'),p=v('l-pass'),err=ge('l-err');
+  err.style.display='none';
+  if(!e||!p){showErr(err,'Email ve şifre gerekli');return}
+  btn.textContent='Giriş yapılıyor...';btn.disabled=true;
+  try{await auth.signInWithEmailAndPassword(e,p);}
+  catch{showErr(err,'Email veya şifre hatalı');}
+  finally{btn.textContent='Giriş Yap';btn.disabled=false;}
+}
+async function doRegister(){
+  const user=v('r-user'),email=v('r-email'),pass=v('r-pass'),pass2=v('r-pass2');
+  const goal=parseInt(document.getElementById('goal-disp').textContent)||2000;
+  const err=ge('r-err');err.style.display='none';
+  if(!user||!email||!pass){showErr(err,'Tüm alanları doldurun');return}
+  if(!/^[a-zA-Z0-9_]{3,20}$/.test(user)){showErr(err,'Kullanıcı adı 3-20 karakter, harf/rakam/_');return}
+  if(pass.length<6){showErr(err,'Şifre en az 6 karakter');return}
+  if(pass!==pass2){showErr(err,'Şifreler eşleşmiyor');return}
+  const ok=await usernameOk(user);
+  if(!ok){showErr(err,'Bu kullanıcı adı alınmış');return}
+  try{
+    const r=await auth.createUserWithEmailAndPassword(email,pass);
+    await db.collection('users').doc(r.user.uid).set({
+      username:user,email,bio:'🏋️ Fitness yolculuğum başlıyor!',
+      dailyCalorieGoal:goal,avatar:'',createdAt:firebase.firestore.FieldValue.serverTimestamp(),
+      achievements:[],friends:[],friendRequests:[]
+    });
+    toast('Hoşgeldin! 🎉');
+  }catch(e){showErr(ge('r-err'),e.message);}
+}
+async function doForgot(){
+  const email=v('f-email'),msg=ge('f-msg');
+  if(!email)return;
+  try{
+    await auth.sendPasswordResetEmail(email);
+    msg.style.display='block';msg.style.color='var(--green)';
+    msg.textContent='✅ Sıfırlama linki gönderildi!';
+  }catch(e){msg.style.display='block';msg.style.color='var(--red)';msg.textContent='Hata: '+e.message;}
+}
+async function usernameOk(u){
+  try{const s=await db.collection('users').where('username','==',u).get();return s.empty;}catch{return true;}
+}
+let uTimer;
+function chkUser(val){
+  clearTimeout(uTimer);const el=ge('r-user-status');
+  if(val.length<3){el.textContent='';return}
+  el.textContent='⏳ Kontrol ediliyor...';el.style.color='var(--text3)';
+  uTimer=setTimeout(async()=>{
+    const ok=await usernameOk(val);
+    el.textContent=ok?'✅ Kullanılabilir':'❌ Alınmış';
+    el.style.color=ok?'var(--green)':'var(--red)';
+  },600);
+}
+function pwStrength(val){
+  let s=0;
+  if(val.length>=8)s++;if(/[A-Z]/.test(val))s++;if(/[0-9]/.test(val))s++;if(/[^A-Za-z0-9]/.test(val))s++;
+  const cols=['','var(--red)','var(--red)','var(--orange)','var(--green)'];
+  const lbls=['','Zayıf','Orta','Güçlü','Çok Güçlü'];
+  const bar=ge('pw-bar');bar.style.background=cols[s]||'var(--border)';bar.style.width=(s/4*100)+'%';
+  ge('pw-txt').textContent=lbls[s]||'';
+}
+
+// ─── APP INIT ─────────────────────────────────────────────────────────────
+async function initApp(){
+  try{
+    const doc=await db.collection('users').doc(CU.uid).get();
+    UP=doc.exists?{id:doc.id,...doc.data()}:{username:'Kullanıcı',bio:'',dailyCalorieGoal:2000,achievements:[],friends:[],friendRequests:[]};
+  }catch{UP={username:'Kullanıcı',bio:'',dailyCalorieGoal:2000,achievements:[],friends:[],friendRequests:[]};}
+  document.getElementById('auth-screen').style.display='none';
+  document.getElementById('main-app').classList.add('show');
+  updateProfileUI();
+  setupMealDL();
+  await Promise.all([loadMeals(),loadWkts(),loadPosts(),loadNotifs()]);
+  renderHome();
+  ge('h-date').textContent=new Date().toLocaleDateString('tr-TR',{weekday:'long',day:'numeric',month:'long'});
+}
+function updateProfileUI(){
+  const name=UP.username||'Kullanıcı';
+  const init=name.charAt(0).toUpperCase();
+  ge('h-name').textContent=name;
+  ge('top-av-txt').textContent=init;
+  ge('p-av-txt').textContent=init;
+  ge('p-name').textContent=name;
+  ge('p-bio').textContent=UP.bio||'Fitness yolculuğum';
+  ge('goal-disp2').textContent=(UP.dailyCalorieGoal||2000)+' kcal';
+}
+
+// ─── LOADERS ──────────────────────────────────────────────────────────────
+async function loadMeals(){try{const s=await db.collection('meals').doc(CU.uid).collection('items').orderBy('createdAt','desc').get();MEALS=s.docs.map(d=>({id:d.id,...d.data()}));}catch{MEALS=[];}}
+async function loadWkts(){try{const s=await db.collection('workouts').doc(CU.uid).collection('items').orderBy('createdAt','desc').get();WKTS=s.docs.map(d=>({id:d.id,...d.data()}));}catch{WKTS=[];}}
+async function loadPosts(){try{const s=await db.collection('posts').orderBy('createdAt','desc').limit(50).get();POSTS=s.docs.map(d=>({id:d.id,...d.data()}));}catch{POSTS=[];}}
+async function loadNotifs(){try{const s=await db.collection('notifications').doc(CU.uid).collection('items').orderBy('createdAt','desc').limit(30).get();NOTIFS=s.docs.map(d=>({id:d.id,...d.data()}));}catch{NOTIFS=[];}updBadge();}
+
+// ─── HOME ─────────────────────────────────────────────────────────────────
+function renderHome(){
+  const today=new Date().toDateString();
+  const tm=MEALS.filter(m=>tsDate(m.createdAt).toDateString()===today);
+  const tw=WKTS.filter(w=>tsDate(w.createdAt).toDateString()===today);
+  const kcal=sum(tm,'calories'),prot=sum(tm,'protein'),carb=sum(tm,'carbs'),fat=sum(tm,'fat');
+  const goal=UP.dailyCalorieGoal||2000;
+  const pct=Math.min(kcal/goal,1);
+  const circ=2*Math.PI*46;
+  ge('cal-ring').style.strokeDashoffset=circ-pct*circ;
+  ge('r-eaten').textContent=kcal;
+  ge('r-goal').textContent=goal;
+  ge('r-left').textContent=Math.max(0,goal-kcal);
+  ge('m-p').textContent=Math.round(prot)+'g';
+  ge('m-c').textContent=Math.round(carb)+'g';
+  ge('m-f').textContent=Math.round(fat)+'g';
+  ge('mb-p').style.width=Math.min(prot/160*100,100)+'%';
+  ge('mb-c').style.width=Math.min(carb/250*100,100)+'%';
+  ge('mb-f').style.width=Math.min(fat/60*100,100)+'%';
+  const str=calcStreak();
+  ge('h-streak').textContent=str;ge('h-meals').textContent=tm.length;ge('h-wkts').textContent=tw.length;
+  const mEl=ge('h-meals-list');
+  mEl.innerHTML=tm.length?tm.slice(0,5).map(mealHTML).join(''):emptyHTML('🍽️','Henüz öğün yok','İlk öğünü ekle!');
+  const wEl=ge('h-wkts-list');
+  wEl.innerHTML=tw.length?tw.slice(0,3).map(wktHTML).join(''):emptyHTML('💪','Henüz antrenman yok','Hadi başla!');
+}
+
+// ─── MEALS PAGE ───────────────────────────────────────────────────────────
+function renderMealsPage(){
+  const q=(ge('meal-q')?.value||'').toLowerCase();
+  let list=[...MEALS];
+  if(mealCatFilter)list=list.filter(m=>m.category===mealCatFilter);
+  if(q)list=list.filter(m=>(m.name||'').toLowerCase().includes(q));
+  const el=ge('meals-list');
+  if(!list.length){el.innerHTML=emptyHTML('🍽️','Öğün bulunamadı','');return}
+  // group by date
+  const grp={};
+  list.forEach(m=>{
+    const k=tsDate(m.createdAt).toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'});
+    (grp[k]=grp[k]||[]).push(m);
+  });
+  el.innerHTML=Object.entries(grp).map(([d,items])=>`<div class="date-hdr">${d}</div>${items.map(mealHTML).join('')}`).join('');
+}
+function setMealCat(btn,cat){
+  mealCatFilter=cat;
+  document.querySelectorAll('.fpill').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  renderMealsPage();
+}
+
+// ─── WORKOUTS PAGE ────────────────────────────────────────────────────────
+function renderWktsPage(){
+  const el=ge('wkts-list');
+  if(!WKTS.length){el.innerHTML=emptyHTML('💪','Antrenman bulunamadı','İlk antrenmanı ekle!');return}
+  el.innerHTML=WKTS.map(wktHTML).join('');
+}
+
+// ─── SOCIAL ───────────────────────────────────────────────────────────────
+function renderSocial(){if(feedTab==='home')renderFeed();else if(feedTab==='friends')renderFriends();}
+function switchFeed(tab){
+  feedTab=tab;
+  ge('feed-home-wrap').style.display=tab==='home'?'block':'none';
+  ge('feed-discover-wrap').style.display=tab==='discover'?'block':'none';
+  ge('feed-friends-wrap').style.display=tab==='friends'?'block':'none';
+  ['home','discover','friends'].forEach(t=>{
+    const b=ge('ft-'+t);b.classList.toggle('active',t===tab);
+  });
+  if(tab==='friends')renderFriends();
+  if(tab==='home')renderFeed();
+}
+function renderFeed(){
+  const el=ge('feed-posts');
+  const posts=POSTS.filter(p=>p.privacy==='public'||p.authorId===CU?.uid);
+  if(!posts.length){el.innerHTML=emptyHTML('📝','Henüz gönderi yok','İlk paylaşımı yap!');return}
+  el.innerHTML=posts.map(postHTML).join('');
+}
+function renderFriends(){
+  const fl=ge('friends-list');
+  fl.innerHTML=FRIENDS.length?FRIENDS.map(f=>`
+    <div class="friend-card"><div class="fc-av">${(f.username||'?').charAt(0).toUpperCase()}</div>
+    <div class="fc-info"><div class="fc-name">${esc(f.username||'?')}</div><div class="fc-meta">${esc(f.bio||'')}</div></div>
+    <div class="fc-actions"><button class="btn btn-ghost btn-xs" onclick="removeFriend('${f.id}')">Çıkar</button></div></div>
+  `).join(''):emptyHTML('👥','Henüz arkadaş yok','Keşfet bölümünden ekle');
+  const rl=ge('req-list');
+  rl.innerHTML=FREQ.length?FREQ.map(r=>`
+    <div class="friend-card"><div class="fc-av">${(r.username||'?').charAt(0).toUpperCase()}</div>
+    <div class="fc-info"><div class="fc-name">${esc(r.username||'?')}</div></div>
+    <div class="fc-actions">
+      <button class="btn btn-primary btn-xs" onclick="acceptReq('${r.id}')">Kabul</button>
+      <button class="btn btn-ghost btn-xs" onclick="declineReq('${r.id}')">Reddet</button>
+    </div></div>
+  `).join(''):'<div class="tc-muted fs13" style="padding:8px">Gelen istek yok</div>';
+}
+async function searchUsers(){
+  const q=(ge('user-q')?.value||'').trim().toLowerCase();
+  const el=ge('discover-list');
+  if(q.length<2){el.innerHTML='';return}
+  try{
+    const s=await db.collection('users').where('username','>=',q).where('username','<=',q+'\uf8ff').limit(10).get();
+    const users=s.docs.map(d=>({id:d.id,...d.data()})).filter(u=>u.id!==CU.uid);
+    el.innerHTML=users.length?users.map(u=>`
+      <div class="friend-card"><div class="fc-av">${(u.username||'?').charAt(0).toUpperCase()}</div>
+      <div class="fc-info"><div class="fc-name">${esc(u.username||'?')}</div><div class="fc-meta">${esc(u.bio||'')}</div></div>
+      <button class="btn btn-primary btn-xs" onclick="sendReq('${u.id}','${esc(u.username)}')">+ Ekle</button></div>
+    `).join(''):emptyHTML('🔍','Kullanıcı bulunamadı','');
+  }catch{el.innerHTML='';}
+}
+async function sendReq(toId,toName){
+  try{
+    await db.collection('users').doc(toId).update({friendRequests:firebase.firestore.FieldValue.arrayUnion({fromId:CU.uid,fromName:UP.username||'?'})});
+    toast('Arkadaşlık isteği gönderildi!');
+  }catch{toast('Hata oluştu');}
+}
+async function acceptReq(fromId){
+  try{
+    await db.collection('users').doc(CU.uid).update({friends:firebase.firestore.FieldValue.arrayUnion(fromId)});
+    await db.collection('users').doc(fromId).update({friends:firebase.firestore.FieldValue.arrayUnion(CU.uid)});
+    FREQ=FREQ.filter(r=>r.id!==fromId);
+    FRIENDS.push({id:fromId});renderFriends();toast('Arkadaşlık kabul edildi!');
+  }catch{}
+}
+function declineReq(id){FREQ=FREQ.filter(r=>r.id!==id);renderFriends();}
+async function removeFriend(id){
+  try{await db.collection('users').doc(CU.uid).update({friends:firebase.firestore.FieldValue.arrayRemove(id)});FRIENDS=FRIENDS.filter(f=>f.id!==id);renderFriends();toast('Arkadaşlıktan çıkarıldı');}catch{}
+}
+
+// ─── LIKES & COMMENTS ─────────────────────────────────────────────────────
+async function toggleLike(postId){
+  const p=POSTS.find(x=>x.id===postId);if(!p)return;
+  const uid=CU.uid,likes=p.likes||[];
+  const isLiked=likes.includes(uid);
+  p.likes=isLiked?likes.filter(l=>l!==uid):[...likes,uid];
+  try{await db.collection('posts').doc(postId).update({likes:p.likes});renderFeed();}catch{}
+}
+function toggleCmts(postId){
+  const el=ge('cmts-'+postId);if(!el)return;
+  const open=el.classList.toggle('open');
+  if(open)loadCmts(postId);
+}
+async function loadCmts(postId){
+  try{
+    const s=await db.collection('posts').doc(postId).collection('comments').orderBy('createdAt','asc').get();
+    const el=ge('cmts-list-'+postId);if(!el)return;
+    el.innerHTML=s.docs.map(d=>{const c={id:d.id,...d.data()};return`
+      <div class="cmt"><div class="cmt-av">${(c.authorName||'?').charAt(0).toUpperCase()}</div>
+      <div class="cmt-bubble"><div class="cmt-user">${esc(c.authorName||'?')}</div><div class="cmt-txt">${esc(c.text||'')}</div></div></div>
+    `;}).join('');
+  }catch{}
+}
+async function addCmt(postId){
+  const inp=ge('cmt-inp-'+postId);const txt=inp?.value?.trim();if(!txt)return;inp.value='';
+  try{
+    await db.collection('posts').doc(postId).collection('comments').add({authorId:CU.uid,authorName:UP.username||'?',text:txt,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+    await db.collection('posts').doc(postId).update({commentCount:firebase.firestore.FieldValue.increment(1)});
+    const p=POSTS.find(x=>x.id===postId);if(p)p.commentCount=(p.commentCount||0)+1;
+    await loadCmts(postId);toast('Yorum eklendi');
+  }catch{}
+}
+async function deletePost(id){
+  showConfirm('Gönderiyi Sil','Silmek istediğine emin misin?',async()=>{
+    try{await db.collection('posts').doc(id).delete();POSTS=POSTS.filter(p=>p.id!==id);renderFeed();toast('Silindi');}catch{}
+  });
+}
+
+// ─── STATS PAGE ───────────────────────────────────────────────────────────
+function renderStats(){
+  ge('s-meals').textContent=MEALS.length;ge('s-wkts').textContent=WKTS.length;ge('s-str').textContent=calcStreak();
+  ge('p-meals').textContent=MEALS.length;ge('p-wkts').textContent=WKTS.length;ge('p-str').textContent=calcStreak();ge('p-frds').textContent=FRIENDS.length;
+  renderCharts();renderAchs();
+}
+function renderCharts(){
+  // Calorie chart
+  const ctx1=ge('ch-cal');if(ctx1){if(c1)c1.destroy();
+  const labels=[],data=[];
+  for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);labels.push(d.toLocaleDateString('tr-TR',{weekday:'short'}));
+    data.push(MEALS.filter(m=>tsDate(m.createdAt).toDateString()===d.toDateString()).reduce((a,m)=>a+(m.calories||0),0));}
+  c1=new Chart(ctx1,{type:'bar',data:{labels,datasets:[{data,backgroundColor:'rgba(108,92,231,.55)',borderColor:'rgba(162,155,254,1)',borderWidth:2,borderRadius:8}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#8080a0',font:{size:11}}},y:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#8080a0',font:{size:11}}}}}});}
+  // Macro chart
+  const ctx2=ge('ch-mac');if(ctx2){if(c2)c2.destroy();
+  const p=sum(MEALS,'protein')||1,c=sum(MEALS,'carbs')||1,f=sum(MEALS,'fat')||1;
+  c2=new Chart(ctx2,{type:'doughnut',data:{labels:['Protein','Karb','Yağ'],datasets:[{data:[p,c,f],backgroundColor:['#ff6b6b','#fdcb6e','#00cec9'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#8080a0',font:{size:11},boxWidth:12,padding:10}}}}});}
+  // Workout chart
+  const ctx3=ge('ch-wkt');if(ctx3){if(c3)c3.destroy();
+  const types={strength:0,cardio:0,flexibility:0,sports:0,other:0};
+  WKTS.forEach(w=>{types[w.type]!==undefined?types[w.type]++:types.other++;});
+  c3=new Chart(ctx3,{type:'doughnut',data:{labels:['💪 Güç','🏃 Kardio','🧘 Esneklik','⚽ Spor','⚡ Diğer'],datasets:[{data:Object.values(types),backgroundColor:['#a29bfe','#ff6b6b','#00cec9','#fdcb6e','#8080a0'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#8080a0',font:{size:11},boxWidth:12,padding:10}}}}});}
+}
+function renderAchs(){
+  const stats=userStats();const unlocked=UP.achievements||[];let cnt=0;
+  ge('ach-grid').innerHTML=ACHS.map(a=>{
+    const done=unlocked.includes(a.id)||a.chk(stats);if(done)cnt++;
+    return`<div class="ach-card ${done?'done':'locked'}"><div class="ach-ico">${a.ico}</div><div class="ach-name">${a.name}</div><div class="ach-stat">${done?'✅ Açıldı':a.desc}</div></div>`;
+  }).join('');
+  ge('ach-ctr').textContent=`${cnt}/${ACHS.length}`;
+  ACHS.forEach(a=>{if(!unlocked.includes(a.id)&&a.chk(stats))unlockAch(a.id,a.name,a.ico);});
+}
+function userStats(){
+  return{
+    meals:MEALS.length,wkts:WKTS.length,streak:calcStreak(),
+    posts:POSTS.filter(p=>p.authorId===CU?.uid).length,
+    frds:FRIENDS.length,likesGiven:0,
+    cardioMin:WKTS.filter(w=>w.type==='cardio').reduce((a,w)=>a+(w.duration||0),0),
+    strMin:WKTS.filter(w=>w.type==='strength').reduce((a,w)=>a+(w.duration||0),0),
+    variety:new Set(WKTS.map(w=>w.type)).size,
+  };
+}
+async function unlockAch(id,name,ico){
+  try{
+    await db.collection('users').doc(CU.uid).update({achievements:firebase.firestore.FieldValue.arrayUnion(id)});
+    UP.achievements=[...(UP.achievements||[]),id];
+    pushNotif(`🏆 ${ico} ${name} başarısı açıldı!`,'🏆','achievement');
+    toast(`Başarı: ${ico} ${name}`);
+  }catch{}
+}
+
+// ─── NOTIFICATIONS ────────────────────────────────────────────────────────
+function renderNotifs(){
+  const el=ge('notifs-list');
+  if(!NOTIFS.length){el.innerHTML=emptyHTML('🔔','Bildirim yok','');return}
+  el.innerHTML=NOTIFS.map(n=>`
+    <div class="notif-item ${n.read?'':'unread'}">
+      <div class="notif-ico">${n.ico||'🔔'}</div>
+      <div class="notif-body"><div class="notif-txt">${esc(n.txt||'')}</div><div class="notif-time">${timeAgo(n.createdAt)}</div></div>
+      ${!n.read?'<div class="notif-unread-dot"></div>':''}
+    </div>
+  `).join('');
+  markAllRead();
+}
+function markAllRead(){NOTIFS.forEach(n=>n.read=true);updBadge();}
+function updBadge(){const u=NOTIFS.filter(n=>!n.read).length;ge('n-badge').style.display=u?'block':'none';}
+async function pushNotif(txt,ico,type){
+  const n={txt,ico,type,read:false,createdAt:new Date()};
+  NOTIFS.unshift(n);updBadge();
+  try{await db.collection('notifications').doc(CU.uid).collection('items').add({...n,createdAt:firebase.firestore.FieldValue.serverTimestamp()});}catch{}
+}
+
+// ─── SAVE ─────────────────────────────────────────────────────────────────
+async function saveMeal(){
+  const name=v('mn');if(!name){toast('Öğün adı gerekli!');return}
+  const data={name,category:v('mcat'),calories:num('mkcal'),protein:num('mpro'),carbs:num('mcar'),fat:num('mfat'),notes:v('mnot'),createdAt:firebase.firestore.FieldValue.serverTimestamp()};
+  try{
+    const ref=await db.collection('meals').doc(CU.uid).collection('items').add(data);
+    MEALS.unshift({id:ref.id,...data,createdAt:new Date()});
+    closeSheet('sh-meal');resetMealForm();renderHome();renderMealsPage();
+    toast('✅ Öğün kaydedildi!');checkAchs();
+  }catch(e){toast('Hata: '+e.message);}
+}
+async function saveWorkout(){
+  const name=v('wn');if(!name){toast('Antrenman adı gerekli!');return}
+  const dur=num('wdur');const intM={low:3.5,med:5,hig:7};
+  const kcal=num('wkcal')||Math.round(intM[selInt]*70*(dur/60));
+  const data={name,type:v('wtype'),duration:dur,caloriesBurned:kcal,intensity:selInt,exercises:getExData(),notes:v('wnot'),createdAt:firebase.firestore.FieldValue.serverTimestamp()};
+  try{
+    const ref=await db.collection('workouts').doc(CU.uid).collection('items').add(data);
+    WKTS.unshift({id:ref.id,...data,createdAt:new Date()});
+    closeSheet('sh-workout');resetWktForm();renderHome();renderWktsPage();
+    toast('✅ Antrenman kaydedildi!');checkAchs();
+  }catch(e){toast('Hata: '+e.message);}
+}
+async function savePost(){
+  const content=v('pcont');if(!content){toast('İçerik gerekli!');return}
+  if(content.length>500){toast('Maks 500 karakter!');return}
+  const data={authorId:CU.uid,authorName:UP.username||'?',content,privacy:v('ppriv'),likes:[],commentCount:0,createdAt:firebase.firestore.FieldValue.serverTimestamp()};
+  try{
+    const ref=await db.collection('posts').add(data);
+    POSTS.unshift({id:ref.id,...data,createdAt:new Date()});
+    closeSheet('sh-post');ge('pcont').value='';
+    renderFeed();toast('📤 Gönderi paylaşıldı!');
+  }catch(e){toast('Hata: '+e.message);}
+}
+async function saveProfile(){
+  const username=v('e-user'),bio=v('e-bio');
+  const goal=parseInt(ge('e-goal-sl').value)||2000;
+  if(!username){toast('Kullanıcı adı gerekli!');return}
+  try{
+    await db.collection('users').doc(CU.uid).update({username,bio,dailyCalorieGoal:goal});
+    UP.username=username;UP.bio=bio;UP.dailyCalorieGoal=goal;
+    closeSheet('sh-edit');updateProfileUI();renderHome();toast('✅ Profil güncellendi!');
+  }catch(e){toast('Hata: '+e.message);}
+}
+
+// ─── DELETE ───────────────────────────────────────────────────────────────
+function deleteMeal(id){showConfirm('Öğünü Sil','Bu öğünü silmek istediğine emin misin?',async()=>{
+  try{await db.collection('meals').doc(CU.uid).collection('items').doc(id).delete();MEALS=MEALS.filter(m=>m.id!==id);renderHome();renderMealsPage();toast('Silindi');}catch{}
+});}
+function deleteWkt(id){showConfirm('Antrenmanı Sil','Bu antrenmanı silmek istediğine emin misin?',async()=>{
+  try{await db.collection('workouts').doc(CU.uid).collection('items').doc(id).delete();WKTS=WKTS.filter(w=>w.id!==id);renderHome();renderWktsPage();toast('Silindi');}catch{}
+});}
+
+// ─── LOGOUT ───────────────────────────────────────────────────────────────
+function doLogout(){showConfirm('Çıkış Yap','Hesabından çıkmak istediğine emin misin?',async()=>{await auth.signOut();location.reload();});}
+function saveSettings(){toast('Ayarlar kaydedildi');}
+
+// ─── AI CHAT ──────────────────────────────────────────────────────────────
+async function sendChat(){
+  const inp=ge('chat-inp');const msg=inp.value.trim();if(!msg)return;inp.value='';
+  appendMsg('user',msg);showTyping();
+  const stats=userStats();
+  const sys=`Sen bir fitness ve beslenme koçusun. Kullanıcı verisi: ${stats.meals} öğün, ${stats.wkts} antrenman, ${stats.streak} gün streak, ${UP.dailyCalorieGoal||2000} kcal hedef. Türkçe, kısa (max 3 cümle), motive edici cevap ver.`;
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:300,system:sys,messages:[{role:'user',content:msg}]})});
+    const d=await r.json();hideTyping();
+    appendMsg('ai',d.content?.[0]?.text||'Bir sorun oluştu, tekrar dene!');
+  }catch{hideTyping();appendMsg('ai','Bağlantı hatası. İnterneti kontrol et 💪');}
+}
+function qChat(msg){ge('chat-inp').value=msg;sendChat();}
+function appendMsg(role,text){
+  const el=ge('chat-msgs');
+  const d=document.createElement('div');d.className=`cmsg ${role}`;
+  d.innerHTML=role==='ai'?`<div class="cav">🤖</div><div class="cbubble">${esc(text)}</div>`:`<div class="cbubble">${esc(text)}</div>`;
+  el.appendChild(d);el.scrollTop=el.scrollHeight;
+}
+let typingNode=null;
+function showTyping(){const el=ge('chat-msgs');typingNode=document.createElement('div');typingNode.className='cmsg ai';typingNode.innerHTML=`<div class="cav">🤖</div><div class="cbubble" style="padding:6px 12px"><div class="typing"><div class="td"></div><div class="td"></div><div class="td"></div></div></div>`;el.appendChild(typingNode);el.scrollTop=el.scrollHeight;}
+function hideTyping(){if(typingNode){typingNode.remove();typingNode=null;}}
+
+// ─── SHEETS ───────────────────────────────────────────────────────────────
+function openAddSheet(){openSheet('sh-add')}
+function openMealSheet(){setupMealDL();openSheet('sh-meal')}
+function openWorkoutSheet(){resetWktForm();openSheet('sh-workout')}
+function openPostSheet(){ge('pcont').value='';ge('p-chr').textContent='0 / 500';openSheet('sh-post')}
+function openAISheet(){openSheet('sh-ai')}
+function openEditSheet(){
+  ge('e-user').value=UP.username||'';ge('e-bio').value=UP.bio||'';
+  const g=UP.dailyCalorieGoal||2000;ge('e-goal-sl').value=g;ge('e-goal-txt').textContent=g;
+  openSheet('sh-edit');
+}
+function openSheet(id){
+  document.getElementById(id).classList.add('open');
+  document.body.style.overflow='hidden';
+  // drag to close
+  const sheet=document.querySelector('#'+id+' .sheet');
+  setupDragClose(sheet,id);
+}
+function closeSheet(id){document.getElementById(id).classList.remove('open');document.body.style.overflow='';}
+
+// drag-to-close for sheets
+function setupDragClose(el,ovId){
+  if(el._dragSet)return;el._dragSet=true;
+  let startY=0,startT=0,dragging=false;
+  const handle=el.querySelector('.sheet-handle');
+  const startFn=(y)=>{startY=y;startT=Date.now();dragging=true;el.style.transition='none';};
+  const moveFn=(y)=>{if(!dragging)return;const dy=y-startY;if(dy>0)el.style.transform=`translateY(${dy}px)`;};
+  const endFn=(y)=>{
+    dragging=false;el.style.transition='';const dy=y-startY;const dt=Date.now()-startT;
+    if(dy>80||(dy>30&&dt<200)){el.style.transform='';closeSheet(ovId);}
+    else el.style.transform='';
+  };
+  handle.addEventListener('touchstart',e=>{startFn(e.touches[0].clientY);},{passive:true});
+  handle.addEventListener('touchmove',e=>{moveFn(e.touches[0].clientY);},{passive:true});
+  handle.addEventListener('touchend',e=>{endFn(e.changedTouches[0].clientY);},{passive:true});
+  // tap overlay to close
+  document.getElementById(ovId).addEventListener('touchstart',e=>{if(e.target===document.getElementById(ovId))closeSheet(ovId);},{passive:true});
+  document.getElementById(ovId).addEventListener('click',e=>{if(e.target===document.getElementById(ovId))closeSheet(ovId);});
+}
+
+// ─── EXERCISES ────────────────────────────────────────────────────────────
+function addEx(){
+  const c=ge('ex-list');const id=++exCnt;
+  const d=document.createElement('div');d.className='ex-entry';d.id='ex-'+id;
+  d.innerHTML=`<button class="ex-remove" onclick="rmEx(${id})">✕</button>
+    <div class="fg"><label class="fl">Egzersiz</label><input type="text" class="fi ex-n" placeholder="örn: Squat"></div>
+    <div class="form-grid-3">
+      <div class="fg"><label class="fl">Set</label><input type="number" class="fi ex-s" placeholder="3" min="1" inputmode="numeric"></div>
+      <div class="fg"><label class="fl">Tekrar</label><input type="number" class="fi ex-r" placeholder="12" min="1" inputmode="numeric"></div>
+      <div class="fg"><label class="fl">kg</label><input type="number" class="fi ex-w" placeholder="-" min="0" inputmode="decimal"></div>
+    </div>`;
+  c.appendChild(d);
+}
+function rmEx(id){ge('ex-'+id)?.remove();}
+function getExData(){return Array.from(document.querySelectorAll('.ex-entry')).map(el=>({name:el.querySelector('.ex-n')?.value||'',sets:parseInt(el.querySelector('.ex-s')?.value)||0,reps:parseInt(el.querySelector('.ex-r')?.value)||0,weight:parseFloat(el.querySelector('.ex-w')?.value)||0})).filter(e=>e.name);}
+function setInt(level){
+  selInt=level;
+  ['low','med','hig'].forEach(l=>{const el=ge('int-'+l);el.classList.remove('sel');});
+  ge('int-'+level).classList.add('sel');
+}
+
+// ─── FORM RESET ───────────────────────────────────────────────────────────
+function resetMealForm(){['mn','mkcal','mpor','mpro','mcar','mfat','mnot'].forEach(id=>{const e=ge(id);if(e)e.value='';})}
+function resetWktForm(){['wn','wdur','wkcal','wnot'].forEach(id=>{const e=ge(id);if(e)e.value=''});ge('ex-list').innerHTML='';exCnt=0;setInt('med');}
+
+// ─── MEAL DATALIST ────────────────────────────────────────────────────────
+function setupMealDL(){
+  const dl=ge('meal-dl');if(!dl)return;
+  dl.innerHTML=MEAL_DB.map(m=>`<option value="${m.name}">`).join('');
+  const inp=ge('mn');if(!inp||inp._setup)return;inp._setup=true;
+  inp.addEventListener('change',()=>{
+    const f=MEAL_DB.find(m=>m.name.toLowerCase()===inp.value.toLowerCase());
+    if(f){ge('mkcal').value=f.cal;ge('mpro').value=f.p;ge('mcar').value=f.c;ge('mfat').value=f.f;}
+  });
+}
+
+// ─── POST HELPERS ─────────────────────────────────────────────────────────
+function updPChr(el){ge('p-chr').textContent=el.value.length+' / 500';}
+function addToPost(txt){const el=ge('pcont');el.value=(el.value+(el.value?' ':'')+txt).slice(0,500);updPChr(el);}
+
+// ─── PAGE ROUTING ─────────────────────────────────────────────────────────
+function showPage(page){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));
+  const pg=ge('page-'+page);if(pg)pg.classList.add('active');
+  const ni=ge('ni-'+page);if(ni)ni.classList.add('active');
+  // scroll to top
+  ge('scroll-area').scrollTo({top:0,behavior:'instant'});
+  if(page==='home')renderHome();
+  if(page==='meals')renderMealsPage();
+  if(page==='workouts')renderWktsPage();
+  if(page==='social')renderSocial();
+  if(page==='stats'||page==='profile')renderStats();
+  if(page==='notifs')renderNotifs();
+}
+
+// ─── CONFIRM ──────────────────────────────────────────────────────────────
+function showConfirm(title,text,onOk){
+  ge('cf-title').textContent=title;ge('cf-text').textContent=text;
+  ge('cf-ok').onclick=()=>{closeSheet('sh-confirm');onOk();};
+  openSheet('sh-confirm');
+}
+
+// ─── ACHIEVEMENTS CHECK ───────────────────────────────────────────────────
+function checkAchs(){const stats=userStats();ACHS.forEach(a=>{if(!(UP.achievements||[]).includes(a.id)&&a.chk(stats))unlockAch(a.id,a.name,a.ico);});}
+
+// ─── HTML BUILDERS ────────────────────────────────────────────────────────
+const CAT_ICO={kahvaltı:'🌅','öğle':'🍽️',akşam:'🌙',atıştırmalık:'🍿'};
+const WTYPE={strength:'b-str',cardio:'b-car',flexibility:'b-fle',sports:'b-spo',other:'b-oth'};
+const WNAME={strength:'💪 Güç',cardio:'🏃 Kardio',flexibility:'🧘 Esneklik',sports:'⚽ Spor',other:'⚡ Diğer'};
+
+function mealHTML(m){return`<div class="mi">
+  <div class="mi-ico">${CAT_ICO[m.category]||'🍽️'}</div>
+  <div class="mi-info"><div class="mi-name">${esc(m.name)}</div><div class="mi-meta">${m.protein||0}g P · ${m.carbs||0}g K · ${m.fat||0}g Y</div></div>
+  <div class="mi-kcal">${m.calories||0} kcal</div>
+  <button class="mi-del" onclick="deleteMeal('${m.id}')">✕</button>
+</div>`;}
+
+function wktHTML(w){return`<div class="wi">
+  <div class="wi-info">
+    <div class="wi-name">${esc(w.name)}</div>
+    <div class="wi-meta">
+      <span class="badge ${WTYPE[w.type]||'b-oth'}">${WNAME[w.type]||w.type}</span>
+      <span class="wi-extra">⏱ ${w.duration||0} dk</span>
+      ${w.caloriesBurned?`<span class="wi-extra tc-orange">🔥 ${w.caloriesBurned} kcal</span>`:''}
+    </div>
+  </div>
+  <button class="mi-del" onclick="deleteWkt('${w.id}')">✕</button>
+</div>`;}
+
+function postHTML(p){
+  const liked=(p.likes||[]).includes(CU?.uid);
+  const init=(p.authorName||'?').charAt(0).toUpperCase();
+  return`<div class="post-card">
+    <div class="pc-head">
+      <div class="pc-av">${init}</div>
+      <div style="flex:1"><div class="pc-name">${esc(p.authorName||'Anonim')}</div><div class="pc-time">${timeAgo(p.createdAt)}</div></div>
+      ${p.authorId===CU?.uid?`<button class="btn btn-ghost btn-xs" onclick="deletePost('${p.id}')">🗑️</button>`:''}
+    </div>
+    <div class="pc-body">${esc(p.content||'')}</div>
+    <div class="pc-actions">
+      <button class="pc-act ${liked?'liked':''}" onclick="toggleLike('${p.id}')">${liked?'❤️':'🤍'} ${(p.likes||[]).length}</button>
+      <button class="pc-act" onclick="toggleCmts('${p.id}')">💬 ${p.commentCount||0}</button>
+    </div>
+    <div class="comments-drop" id="cmts-${p.id}">
+      <div id="cmts-list-${p.id}"></div>
+      <div class="cmt-input-row mt8">
+        <input class="cmt-input" id="cmt-inp-${p.id}" placeholder="Yorum yaz..." onkeydown="if(event.key==='Enter')addCmt('${p.id}')">
+        <button class="cmt-send" onclick="addCmt('${p.id}')">➤</button>
+      </div>
+    </div>
+  </div>`;}
+
+function emptyHTML(ico,ttl,sub){return`<div class="empty"><div class="empty-ico">${ico}</div><div class="empty-ttl">${ttl}</div>${sub?`<div class="empty-sub">${sub}</div>`:''}</div>`;}
+
+// ─── UTILS ────────────────────────────────────────────────────────────────
+function ge(id){return document.getElementById(id)}
+function v(id){return (ge(id)?.value||'').trim()}
+function num(id){return parseFloat(ge(id)?.value)||0}
+function sum(arr,key){return arr.reduce((a,x)=>a+(x[key]||0),0)}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function tsDate(ts){if(!ts)return new Date(0);return ts.toDate?ts.toDate():new Date(ts);}
+function timeAgo(ts){
+  if(!ts)return'şimdi';const d=tsDate(ts);const diff=Date.now()-d.getTime();
+  const m=Math.floor(diff/60000);if(m<1)return'şimdi';if(m<60)return m+' dk önce';
+  const h=Math.floor(m/60);if(h<24)return h+' saat önce';return Math.floor(h/24)+' gün önce';
+}
+function calcStreak(){
+  const all=[...MEALS,...WKTS];if(!all.length)return 0;
+  const days=new Set(all.map(x=>tsDate(x.createdAt).toDateString()));
+  let s=0,d=new Date();
+  while(days.has(d.toDateString())){s++;d.setDate(d.getDate()-1);}
+  return s;
+}
+function toast(msg){
+  const c=ge('toast-wrap');const el=document.createElement('div');el.className='toast';el.textContent=msg;
+  c.appendChild(el);requestAnimationFrame(()=>el.classList.add('show'));
+  setTimeout(()=>{el.classList.remove('show');setTimeout(()=>el.remove(),300);},2800);
+}
+const tc='tc-orange'; // just to keep tc-orange used in JSX
+</script>
+</body>
+</html>
